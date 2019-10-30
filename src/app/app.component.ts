@@ -22,11 +22,28 @@ export class AppComponent {
       icon: 'bluetooth'
     },
     {
+      title: 'Ricerca',
+      icon: 'search',
+      children: [
+        {
+          title: 'Ricerca per indirizzo',
+          url: '/searchAddress',
+          icon: 'pin'
+        },
+        {
+          title: 'Ricerca per data',
+          url: '/searchDate',
+          icon: 'calendar'
+        }]
+    },
+    {
       title: 'Contattaci',
       url: '/contact',
       icon: 'contacts'
     }
   ];
+
+
 
   constructor(
     private platform: Platform,
@@ -42,4 +59,9 @@ export class AppComponent {
       this.splashScreen.hide();
     });
   }
+
+
+
+
+
 }

@@ -12,7 +12,9 @@ const routes: Routes = [
     loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
   },
   { path: 'connect', loadChildren: './connect/connect.module#ConnectPageModule' },
-  { path: 'contact', loadChildren: './contact/contact.module#ContactPageModule' }
+  { path: 'contact', loadChildren: './contact/contact.module#ContactPageModule' },
+  { path: 'search-date', loadChildren: './search-date/search-date.module#SearchDatePageModule' },
+  { path: 'search-address', loadChildren: './search-address/search-address.module#SearchAddressPageModule' }
 ];
 
 @NgModule({
