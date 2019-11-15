@@ -1,0 +1,15 @@
+.active{
+    --ion-text-color: var(--color-florence-red);
+    ion-icon{
+        --ion-text-color-rgb: var(--color-florence-red);
+    }
+}
+
+.active-parent{
+    font-weight: 500;
+}
+
+.sub-item{
+    padding-left:20px;
+    font-size: small;
+}
