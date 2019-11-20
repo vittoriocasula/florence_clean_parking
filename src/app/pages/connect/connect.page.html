@@ -8,4 +8,54 @@
 </ion-header>
 
 <ion-content>
+  <ion-list>
+    <ion-radio-group ngModel name="selectedId">
+      <ion-list-header>
+        <ion-label>Dispositivi associati</ion-label>
+        <ion-buttons>
+          <ion-button (click)="onRefresh()">
+            <ion-icon name="refresh"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-list-header>
+      <ion-item *ngFor="let device of associatedDevices">
+        <ion-label>
+          <h1> {{ device.name }} </h1>
+          <p> {{ device.mac }} </p>
+        </ion-label>
+        <ion-radio #radio slot="start" value="{{device.mac}}" no-padding margin (ionSelect)="onSelect(radio)"></ion-radio>
+      </ion-item>
+      <ion-list-header>
+        <ion-label>Dispositivi non accoppiati</ion-label>
+        <ion-buttons>
+          <ion-button (click)="onDiscover()">
+            <ion-icon name="search"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-list-header>
+      <div *ngIf="!isDiscovering">
+        <ion-item *ngFor="let device of availableDevices">
+          <ion-label>
+            <h1>{{ device.name }}</h1>
+            <p>{{ device.mac }}</p>
+          </ion-label>
+          <ion-radio #r slot="start" value="{{device.mac}}" no-padding margin (ionSelect)="onSelect(r)">
+          </ion-radio>
+        </ion-item>
+      </div>
+    </ion-radio-group>
+  </ion-list>
+  <div text-center *ngIf="isDiscovering">
+    <ion-spinner></ion-spinner>
+  </div>
+  <ion-grid>
+    <ion-row>
+      <ion-col offset="7">
+        <ion-button margin (click)="onConnect()" [disabled]="!isSelected">
+          <ion-label>Connetti</ion-label>
+          <ion-icon slot="start" name="bluetooth"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
