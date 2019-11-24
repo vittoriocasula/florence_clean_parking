@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +22,7 @@ import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
   ],
   providers: [
     BluetoothSerial,
+    LocalNotifications,
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }

@@ -20,13 +20,13 @@
                 <ion-item lines="none">
                   <ion-label>
                     <p>Stato Connessione:</p>
-                    <p *ngIf="!isConnected">Disconnesso</p>
-                    <p *ngIf="isConnected">Connesso</p>
+                    <p *ngIf="!(connectionService.connectionState)">Disconnesso</p>
+                    <p *ngIf="connectionService.connectionState">Connesso ad {{connectionService.connectedDevice.name}}</p>
                   </ion-label>
                 </ion-item>
               </ion-col>
             </ion-row>
-            <ion-row *ngIf="isConnected">
+            <ion-row *ngIf="connectionService.connectionState">
               <ion-col offset="5">
                 <ion-button margin (click)="onDisconnect()">
                   <ion-label>Disconnetti</ion-label>
@@ -34,19 +34,12 @@
                 </ion-button>
               </ion-col>
             </ion-row>
-            <ion-row *ngIf="!isConnected">
+            <ion-row *ngIf="!(connectionService.connectionState)">
               <ion-col offset="6">
                 <ion-button margin (click)="onConnect()">
                   <ion-label>Connetti</ion-label>
                   <ion-icon slot="start" name="bluetooth"></ion-icon>
                 </ion-button>
-              </ion-col>
-            </ion-row>
-            <ion-row *ngIf="!(bluetoothEnabled)">
-              <ion-col size="5" offset="7">
-                <ion-label color="danger">
-                  Attiva il bluetooth!
-                </ion-label>
               </ion-col>
             </ion-row>
           </ion-grid>

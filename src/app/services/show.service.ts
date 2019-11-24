@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,8 @@ export class ShowService {
 
   constructor(
     private alertCtrl: AlertController,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private localNotifications: LocalNotifications
   ) { }
 
   async showToast(msg: string) {
@@ -28,10 +30,18 @@ export class ShowService {
 
   async showError(error: string) {
     const alert = await this.alertCtrl.create({
-      header: 'Error',
+      header: 'Errore',
       subHeader: error,
       buttons: ['Dismiss']
     });
     await alert.present();
+  }
+
+  showNotification(title: string, text: string) {
+    this.localNotifications.schedule({
+      title,
+      text,
+      led: '0000FF',
+    });
   }
 }

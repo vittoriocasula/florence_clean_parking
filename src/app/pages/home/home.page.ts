@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
-import { ShowService } from 'src/app/services/show.service';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
+import { ShowService } from 'src/app/services/show.service';
+import { ConnectionService } from 'src/app/services/connection.service';
 
 @Component({
   selector: 'app-home',
@@ -10,38 +11,30 @@ import { MenuController } from '@ionic/angular';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  bluetoothEnabled = true;
-  isConnected: boolean;
 
   constructor(
     private bluetoothSerial: BluetoothSerial,
     private router: Router,
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
+    private showService: ShowService,
+    public connectionService: ConnectionService
   ) { }
 
   ionViewWillEnter() {
     this.menuCtrl.swipeGesture(true);
-    this.bluetoothSerial.isEnabled().then(success => {
-      this.bluetoothSerial.isConnected().then(connect => {
-        this.isConnected = true;
-      }, error => {
-        this.isConnected = false;
-      });
-    }, error => { });
   }
 
   onConnect() {
     this.bluetoothSerial.isEnabled().then(success => {
-      this.bluetoothEnabled = true;
       this.router.navigateByUrl('/menu/connect');
     }, error => {
-      this.bluetoothEnabled = false;
+      this.showService.showToast('Attiva il bluetooth');
     });
   }
 
   onDisconnect() {
     this.bluetoothSerial.disconnect();
-    this.isConnected = false;
+    this.connectionService.disconnect();
   }
 
 }
