@@ -5,6 +5,7 @@ import { Device } from 'src/app/models/device.model';
 import { ShowService } from 'src/app/services/show.service';
 import { ConnectionService } from 'src/app/services/connection.service';
 import { DevicesService } from 'src/app/services/devices.service';
+import { PositionService } from 'src/app/services/position.service';
 
 @Component({
   selector: 'app-connect',
@@ -25,7 +26,8 @@ export class ConnectPage implements OnInit {
     private navCtrl: NavController,
     private menuCtrl: MenuController,
     private connectionService: ConnectionService,
-    private devicesService: DevicesService
+    private devicesService: DevicesService,
+    private positionService: PositionService
   ) { }
 
   ngOnInit() {
@@ -110,7 +112,10 @@ export class ConnectPage implements OnInit {
         }, error => {
           if (this.connectionService.connectionState) {
             this.connectionService.connectionState = false;
-            this.showService.showNotification('Florence Clean Parking', 'Disconnesso');
+            const arduinoLat = this.positionService.getArduinoLat();
+            const arduinoLng = this.positionService.getArduinoLng();
+            this.showService.showNotification('Disconnesso', 'lat=' + arduinoLat + ', lng=' + arduinoLng);
+            // this.showService.showNotification('Disconnesso', 'prova');
             // TODO correggere il pulsante disconnetti nella home page
           } else {
             loadingEl.dismiss();

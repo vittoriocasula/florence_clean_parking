@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { ShowService } from 'src/app/services/show.service';
 import { ConnectionService } from 'src/app/services/connection.service';
+import { PositionService } from 'src/app/services/position.service';
 
 @Component({
   selector: 'app-home',
@@ -17,11 +18,32 @@ export class HomePage {
     private router: Router,
     private menuCtrl: MenuController,
     private showService: ShowService,
-    public connectionService: ConnectionService
+    public connectionService: ConnectionService,
+    private positionService: PositionService
   ) { }
 
   ionViewWillEnter() {
     this.menuCtrl.swipeGesture(true);
+    if (this.connectionService.connectionState) {
+      this.bluetoothSerial.subscribe('\n').subscribe(success => {
+        if (!((success + '').toString() === '\n')) {
+          this.handleData(success);
+        }
+      }, error => {
+        this.showService.showError(error);
+      });
+    }
+  }
+
+  handleData(data: string) {
+    const message = data.split(':');
+    if (message[0] === 'lat') {
+      this.showService.showToast('lat =' + message[1].replace('\n', '') + ';');
+      this.positionService.setArduinoLat(message[1]);
+    } else {
+      this.showService.showToast('lng =' + message[1].replace('\n', '') + ';');
+      this.positionService.setArduinoLng(message[1]);
+    }
   }
 
   onConnect() {
