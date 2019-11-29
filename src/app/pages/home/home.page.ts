@@ -36,12 +36,11 @@ export class HomePage {
   }
 
   handleData(data: string) {
+    // this.showService.showToast('received:');
     const message = data.split(':');
     if (message[0] === 'lat') {
-      this.showService.showToast('lat =' + message[1].replace('\n', '') + ';');
       this.positionService.setArduinoLat(message[1]);
     } else {
-      this.showService.showToast('lng =' + message[1].replace('\n', '') + ';');
       this.positionService.setArduinoLng(message[1]);
     }
   }

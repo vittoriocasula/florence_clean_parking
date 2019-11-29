@@ -12,12 +12,10 @@ export class PositionService {
   constructor(private showService: ShowService) { }
 
   setArduinoLat(lat: string) {
-    // this.showService.showToast(lat);
     this.arduinoLat = lat.replace('\n', '');
   }
 
   setArduinoLng(lng: string) {
-    // this.showService.showToast(lng);
     this.arduinoLng = lng.replace('\n', '');
   }
 

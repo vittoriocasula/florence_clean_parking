@@ -111,12 +111,10 @@ export class ConnectPage implements OnInit {
           this.navCtrl.navigateBack('/menu/home');
         }, error => {
           if (this.connectionService.connectionState) {
-            this.connectionService.connectionState = false;
+            this.connectionService.connectionState = false; // TODO correggere il pulsante disconnetti nella home page
             const arduinoLat = this.positionService.getArduinoLat();
             const arduinoLng = this.positionService.getArduinoLng();
             this.showService.showNotification('Disconnesso', 'lat=' + arduinoLat + ', lng=' + arduinoLng);
-            // this.showService.showNotification('Disconnesso', 'prova');
-            // TODO correggere il pulsante disconnetti nella home page
           } else {
             loadingEl.dismiss();
             this.showService.showError('impossibile connettersi a questo dispositivo!');

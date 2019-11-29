@@ -7,7 +7,9 @@ const routes: Routes = [
   { path: 'menu/connect', loadChildren: './pages/connect/connect.module#ConnectPageModule' },
   { path: 'menu/contact', loadChildren: './pages/contact/contact.module#ContactPageModule' },
   { path: 'menu/search-date', loadChildren: './pages/search-date/search-date.module#SearchDatePageModule' },
-  { path: 'menu/search-address', loadChildren: './pages/search-address/search-address.module#SearchAddressPageModule' }
+  { path: 'menu/search-address', loadChildren: './pages/search-address/search-address.module#SearchAddressPageModule' },
+  { path: 'menu/map', loadChildren: './pages/map/map.module#MapPageModule' }
+
 ];
 
 @NgModule({

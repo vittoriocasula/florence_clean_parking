@@ -21,9 +21,9 @@ export class AppComponent {
       open: false
     },
     {
-      title: 'Connetti',
-      url: '/menu/connect',
-      icon: 'bluetooth',
+      title: 'Mappa',
+      url: '/menu/map',
+      icon: 'map',
       children: [],
       open: false
     },
