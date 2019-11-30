@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ShowService } from './show.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +9,7 @@ export class PositionService {
   private arduinoLat: string;
   private arduinoLng: string;
 
-  constructor(private showService: ShowService) { }
+  constructor(private http: HttpClient) { }
 
   setArduinoLat(lat: string) {
     this.arduinoLat = lat.replace('\n', '');
@@ -26,4 +26,10 @@ export class PositionService {
   getArduinoLng() {
     return this.arduinoLng;
   }
+
+  getStreet(lat: string, lng: string) {
+    const url = 'https://nominatim.openstreetmap.org/reverse?format=json' + '&lat=' + lat + '&lon=' + lng;
+    return this.http.get(url);
+  }
+
 }

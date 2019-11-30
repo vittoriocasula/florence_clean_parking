@@ -1,12 +1,15 @@
 export class Poc {
-    codiceVia: number;
+    // tslint:disable-next-line: variable-name
+    codice_via: number;
     comune: string;
-    giornoSet: string;
+    // tslint:disable-next-line: variable-name
+    giorno_set: string;
     id: number;
     indirizzo: string;
     // tslint:disable-next-line: variable-name
     ora_fine: string;
     // tslint:disable-next-line: variable-name
     ora_inizio: string;
-    trattoStr: string;
+    // tslint:disable-next-line: variable-name
+    tratto_str: string;
 }

@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { BluetoothSerial } from '@ionic-native/bluetooth-serial/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,7 +19,8 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [
     BluetoothSerial,
