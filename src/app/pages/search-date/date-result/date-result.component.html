@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Risultati Ricerca</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="onMemo()" [disabled]="indexArray.length === 0">
+        <ion-icon name="bookmarks"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-text>
+      <h1 *ngIf="!(time)">{{day}} c'è pulizia strade nelle seguenti zone:</h1>
+      <h1 *ngIf="time">{{day}} alle {{time}} c'è pulizia strade nelle seguenti zone:</h1>
+    </ion-text>
+  </ion-item>
+  <ion-list>
+    <ion-item *ngFor="let poc of listPoc">
+      <ion-text *ngIf="!(time)">
+        {{poc.indirizzo}} {{poc.tratto_str ? 'tratto ' + poc.tratto_str : '' }} dalle ore {{poc.ora_inizio}} alle
+        {{poc.ora_fine}}
+      </ion-text>
+      <ion-text *ngIf="time">
+        {{poc.indirizzo}} {{poc.tratto_str ? 'tratto ' + poc.tratto_str : '' }}
+      </ion-text>
+      <ion-checkbox slot="end" #box (ionChange)="onChange(box, poc)"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { SearchDatePage } from './search-date.page';
+import { DateResultComponent } from './date-result/date-result.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [SearchDatePage]
+  declarations: [SearchDatePage, DateResultComponent],
+  entryComponents: [DateResultComponent]
 })
 export class SearchDatePageModule {}
