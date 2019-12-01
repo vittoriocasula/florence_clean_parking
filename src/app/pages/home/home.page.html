@@ -21,7 +21,8 @@
                   <ion-label>
                     <p>Stato Connessione:</p>
                     <p *ngIf="!(connectionService.connectionState)">Disconnesso</p>
-                    <p *ngIf="connectionService.connectionState">Connesso ad {{connectionService.connectedDevice.name}}</p>
+                    <p *ngIf="connectionService.connectionState">Connesso ad {{connectionService.connectedDevice.name}}
+                    </p>
                   </ion-label>
                 </ion-item>
               </ion-col>
@@ -44,6 +45,33 @@
             </ion-row>
           </ion-grid>
         </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item lines="none">
+          <ion-label>
+            <h1>Promemoria:</h1>
+          </ion-label>
+        </ion-item>
+        <ion-item *ngIf="memos.length === 0" lines="none">
+          <ion-label>
+            <p>Non ci sono promemoria</p>
+          </ion-label>
+        </ion-item>
+        <ion-list *ngIf="memos.length > 0">
+          <ion-item *ngFor="let memo of memos">
+            <ion-text>
+              {{memo.giorno_set}} dalle {{memo.ora_inizio}} alle {{memo.ora_fine}} in {{memo.indirizzo}}
+              {{memo.tratto_str ? 'nel tratto ' + memo.tratto_str : ''}} c'è pulizia strade
+            </ion-text>
+            <ion-buttons>
+              <ion-button (click)="onCancel(memo)">
+                <ion-icon name="close"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-item>
+        </ion-list>
       </ion-col>
     </ion-row>
   </ion-grid>

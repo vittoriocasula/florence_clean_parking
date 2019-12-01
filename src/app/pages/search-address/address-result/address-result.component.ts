@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController, IonCheckbox } from '@ionic/angular';
 import { Poc } from 'src/app/models/poc.model';
+import { Storage } from '@ionic/storage';
+import { ShowService } from 'src/app/services/show.service';
 
 @Component({
   selector: 'app-address-result',
@@ -15,7 +17,11 @@ export class AddressResultComponent implements OnInit {
   indexArray = [];
 
 
-  constructor(private modalCtrl: ModalController) { }
+  constructor(
+    private modalCtrl: ModalController,
+    private storage: Storage,
+    private showService: ShowService
+  ) { }
 
   ngOnInit() {
     if (this.part) {
@@ -40,8 +46,23 @@ export class AddressResultComponent implements OnInit {
   }
 
   onMemo() {
-    this.indexArray.forEach(index => {
-      const poc = this.listPoc[index]; // qui ottengo la lista dei poc selezionati
+    this.storage.get('listPoc').then((listPoc: Poc[]) => {
+      if (listPoc) {
+        this.indexArray.forEach(index => {
+          if (!(listPoc.find(poc => poc.id === this.listPoc[index].id))) {
+            listPoc.push(this.listPoc[index]);
+          }
+        });
+      } else {
+        listPoc = [];
+        this.indexArray.forEach(index => {
+          listPoc.push(this.listPoc[index]);
+        });
+      }
+      this.storage.set('listPoc', listPoc);
+      this.modalCtrl.dismiss(null, 'cancel');
+    }, error => {
+      this.showService.showToast('Qualcosa è andato storto');
     });
   }
 

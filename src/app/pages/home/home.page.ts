@@ -5,6 +5,8 @@ import { MenuController } from '@ionic/angular';
 import { ShowService } from 'src/app/services/show.service';
 import { ConnectionService } from 'src/app/services/connection.service';
 import { PositionService } from 'src/app/services/position.service';
+import { Poc } from 'src/app/models/poc.model';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-home',
@@ -13,13 +15,16 @@ import { PositionService } from 'src/app/services/position.service';
 })
 export class HomePage {
 
+  memos: Poc[] = [];
+
   constructor(
     private bluetoothSerial: BluetoothSerial,
     private router: Router,
     private menuCtrl: MenuController,
     private showService: ShowService,
     public connectionService: ConnectionService,
-    private positionService: PositionService
+    private positionService: PositionService,
+    private storage: Storage
   ) { }
 
   ionViewWillEnter() {
@@ -33,6 +38,15 @@ export class HomePage {
         this.showService.showError(error);
       });
     }
+    this.storage.get('listPoc').then((listPoc: Poc[]) => {
+      if (listPoc) {
+        this.memos = listPoc;
+      } else {
+        this.memos = [];
+      }
+    }, error => {
+      this.showService.showToast('Qualcosa è andato storto');
+    });
   }
 
   handleData(data: string) {
@@ -56,6 +70,11 @@ export class HomePage {
   onDisconnect() {
     this.bluetoothSerial.disconnect();
     this.connectionService.disconnect();
+  }
+
+  onCancel(memo: Poc) {
+    this.memos = this.memos.filter((poc: Poc) => poc.id !== memo.id);
+    this.storage.set('listPoc', this.memos);
   }
 
 }
