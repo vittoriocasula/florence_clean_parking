@@ -8,6 +8,21 @@ import { MenuController } from '@ionic/angular';
 })
 export class ContactPage implements OnInit {
 
+  contacts = [
+    {
+      imageUrl: '../../assets/person.png',
+      eMail: 'femiadavide04@gmail.com',
+      name: 'Davide',
+      surname: 'Femia'
+    },
+    {
+      imageUrl: '../../assets/person.png',
+      eMail: 'vittoriocasula@gmail.com',
+      name: 'Vittorio',
+      surname: 'Casula'
+    }
+  ];
+
   constructor(
     private menuCtrl: MenuController
   ) { }

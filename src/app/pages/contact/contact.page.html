@@ -1,12 +1,59 @@
 <ion-header>
   <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-title>Contattaci</ion-title>
   </ion-toolbar>
-  
 </ion-header>
 
 <ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              <h3>Chi Siamo?</h3>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-label>
+              Siamo due studenti della Facoltà di Ingegneria Informatica dell'università degli Studi di Firenze.
+            </ion-label>
+            <ion-list>
+              <ion-item *ngFor="let contact of contacts">
+                <ion-thumbnail slot="start">
+                  <ion-img [src]="contact.imageUrl"></ion-img>
+                </ion-thumbnail>
+                <ion-text>
+                  <h6>{{contact.name}} {{contact.surname}}</h6>
+                  <p>E-Mail: {{contact.eMail}}</p>
+                </ion-text>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>
+              <h3>Perchè questa app?</h3>
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-label>
+              Quest'app è stata realizzata come progetto d'esame. Lo scopo dell'elaborato in origine era quello di
+              notificare nel momento in cui una persona parcheggia in una zona soggetta a pulizie stradale a Firenze.
+              Col tempo ci siamo affezionati al nostro lavoro aggiungendo sempre più funzionalità.
+              Speriamo che l'app sia utile e vi auguriamo di non prendere nessuna multa per pulizia strade.
+            </ion-label>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
