@@ -14,36 +14,28 @@
     <ion-row>
       <ion-col>
         <ion-card>
-          <ion-grid>
-            <ion-row>
-              <ion-col>
-                <ion-item lines="none">
-                  <ion-label>
-                    <p>Stato Connessione:</p>
-                    <p *ngIf="!(connectionService.connectionState)">Disconnesso</p>
-                    <p *ngIf="connectionService.connectionState">Connesso ad {{connectionService.connectedDevice.name}}
-                    </p>
-                  </ion-label>
-                </ion-item>
-              </ion-col>
-            </ion-row>
-            <ion-row *ngIf="connectionService.connectionState">
-              <ion-col offset="5">
-                <ion-button class="ion-margin" (click)="onDisconnect()">
-                  <ion-label>Disconnetti</ion-label>
-                  <ion-icon slot="start" name="power"></ion-icon>
-                </ion-button>
-              </ion-col>
-            </ion-row>
-            <ion-row *ngIf="!(connectionService.connectionState)">
-              <ion-col offset="6">
-                <ion-button class="ion-margin" (click)="onConnect()">
-                  <ion-label>Connetti</ion-label>
+          <ion-list>
+            <ion-item lines="none">
+              <ion-label>
+                <p>Stato Connessione:</p>
+                <p *ngIf="!(connectionService.connectionState)">Disconnesso</p>
+                <p *ngIf="connectionService.connectionState">Connesso ad {{connectionService.connectedDevice.name}}
+                </p>
+              </ion-label>
+            </ion-item>
+            <ion-item *ngIf="connectionService.connectionState" lines="none">
+              <ion-button class="ion-margin" (click)="onDisconnect()">
+                <ion-label>Disconnetti</ion-label>
+                <ion-icon slot="start" name="power"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item *ngIf="!(connectionService.connectionState)" lines="none">
+                <ion-button id="connect-button" (click)="onConnect()" slot="end">
+                  Connetti
                   <ion-icon slot="start" name="bluetooth"></ion-icon>
                 </ion-button>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
+            </ion-item>
+          </ion-list>
         </ion-card>
       </ion-col>
     </ion-row>
