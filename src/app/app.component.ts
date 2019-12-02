@@ -4,6 +4,7 @@ import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Pages } from './models/pages.model';
+import { FirebaseDbService } from './services/firebase-db.service';
 
 @Component({
   selector: 'app-root',
@@ -60,15 +61,21 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    private db: FirebaseDbService
   ) {
     this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
+      this.db.initFirebaseDb();
       this.statusBar.styleDefault();
+      // provo a connettermi
       this.splashScreen.hide();
+    });
+    this.platform.pause.subscribe(() => {
+      this.db.disconnectFirebaseDb();
     });
   }
 

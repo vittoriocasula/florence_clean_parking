@@ -20,9 +20,7 @@ export class SearchAddressPage {
     private showService: ShowService
   ) { }
 
-  ionViewWillEnter() {
-    this.db.setFirebaseDb();
-  }
+  ionViewWillEnter() { }
 
   presentModal(address: string, part: string, listPoc: Poc[]) {
     const modal = this.modalCtrl.create({

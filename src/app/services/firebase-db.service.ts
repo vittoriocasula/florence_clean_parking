@@ -16,14 +16,18 @@ const firebaseConfig = {
   providedIn: 'root'
 })
 export class FirebaseDbService {
-  private query: any;
-  private database: any;
+  private query: firebase.database.Query;
+  private database: firebase.database.Database;
 
   constructor() { }
 
-  setFirebaseDb() { // occorre richiamare questo metodi prima di una query ( se sono più query successive basta una sola volta)
+  initFirebaseDb() { // occorre richiamare questo metodi prima di una query ( se sono più query successive basta una sola volta)
     firebase.initializeApp(firebaseConfig);
     this.database = firebase.database();
+  }
+
+  disconnectFirebaseDb() {
+    this.database.ref().off();
   }
 
   getPocByAddress(address: string) {

@@ -30,12 +30,7 @@ export class SearchDatePage {
     private loadingCtrl: LoadingController
   ) { }
 
-  ionViewWillEnter() {
-    this.db.setFirebaseDb();
-    /*const value = '13';
-    const message = +value;
-    console.log(message);*/
-  }
+  ionViewWillEnter() { }
 
   presentModal(day: string, time: string, listPoc: Poc[]) {
     const modal = this.modalCtrl.create({

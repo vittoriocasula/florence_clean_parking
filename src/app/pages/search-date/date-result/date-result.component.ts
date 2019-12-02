@@ -35,15 +35,37 @@ export class DateResultComponent implements OnInit {
         const timeEnd: string[] = poc.ora_fine.split(':');
         const hourEnd: number = +timeEnd[0];
         const minutesEnd: number = +timeEnd[1];
-        if (selectedHour < hourStart || selectedHour > hourEnd) {
+        if (this.timeLower(selectedHour, selectedMinutes, hourStart, minutesStart)) {
           isContained = false;
         }
-        if (selectedMinutes < minutesStart || selectedMinutes > minutesEnd) {
+        if (this.timeGreater(selectedHour, selectedMinutes, hourEnd, minutesEnd)) {
           isContained = false;
         }
         return isContained;
       });
     }
+  }
+
+  private timeGreater(hourTarget: number, minutesTarget: number, hour: number, minutes: number) {
+    let isGreater = false;
+    if (hourTarget > hour) {
+      isGreater = true;
+    }
+    if (hourTarget === hour && minutesTarget > minutes) {
+      isGreater = true;
+    }
+    return isGreater;
+  }
+
+  private timeLower(hourTarget: number, minutesTarget: number, hour: number, minutes: number) {
+    let isLower = false;
+    if (hourTarget < hour) {
+      isLower = true;
+    }
+    if (hourTarget === hour && minutesTarget < minutes) {
+      isLower = true;
+    }
+    return isLower;
   }
 
   onCancel() {

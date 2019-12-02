@@ -29,7 +29,7 @@
             </ion-row>
             <ion-row *ngIf="connectionService.connectionState">
               <ion-col offset="5">
-                <ion-button margin (click)="onDisconnect()">
+                <ion-button class="ion-margin" (click)="onDisconnect()">
                   <ion-label>Disconnetti</ion-label>
                   <ion-icon slot="start" name="power"></ion-icon>
                 </ion-button>
@@ -37,7 +37,7 @@
             </ion-row>
             <ion-row *ngIf="!(connectionService.connectionState)">
               <ion-col offset="6">
-                <ion-button margin (click)="onConnect()">
+                <ion-button class="ion-margin" (click)="onConnect()">
                   <ion-label>Connetti</ion-label>
                   <ion-icon slot="start" name="bluetooth"></ion-icon>
                 </ion-button>
