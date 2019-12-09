@@ -41,7 +41,7 @@ export class AppComponent {
           open: false
         },
         {
-          title: 'Ricerca per data',
+          title: 'Ricerca per giorno',
           url: '/menu/search-date',
           icon: 'calendar',
           children: [],
@@ -71,7 +71,8 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.db.initFirebaseDb();
       this.statusBar.styleDefault();
-      // provo a connettermi
+      // provo a connettermi automaticamente
+      // setta arduinoLat e arduinoLng
       this.splashScreen.hide();
     });
     this.platform.pause.subscribe(() => {

@@ -12,11 +12,13 @@ export class PositionService {
   constructor(private http: HttpClient) { }
 
   setArduinoLat(lat: string) {
-    this.arduinoLat = lat.replace('\n', '');
+    const realLat = lat.trim().replace('\n', '');
+    this.arduinoLat = Array.from(realLat).splice(1, realLat.length - 2).join('');
   }
 
   setArduinoLng(lng: string) {
-    this.arduinoLng = lng.replace('\n', '');
+    const realLng = lng.trim().replace('\n', '');
+    this.arduinoLng = Array.from(realLng).splice(1, realLng.length - 2).join('');
   }
 
   getArduinoLat() {

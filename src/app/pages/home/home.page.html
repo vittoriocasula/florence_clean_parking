@@ -24,13 +24,13 @@
               </ion-label>
             </ion-item>
             <ion-item *ngIf="connectionService.connectionState" lines="none">
-              <ion-button class="ion-margin" (click)="onDisconnect()">
+              <ion-button slot="end" class="bluetooth-buttons" (click)="onDisconnect()">
                 <ion-label>Disconnetti</ion-label>
                 <ion-icon slot="start" name="power"></ion-icon>
               </ion-button>
             </ion-item>
             <ion-item *ngIf="!(connectionService.connectionState)" lines="none">
-                <ion-button id="connect-button" (click)="onConnect()" slot="end">
+                <ion-button class="bluetooth-buttons" (click)="onConnect()" slot="end">
                   Connetti
                   <ion-icon slot="start" name="bluetooth"></ion-icon>
                 </ion-button>
