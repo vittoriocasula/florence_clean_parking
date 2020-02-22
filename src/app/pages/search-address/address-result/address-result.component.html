@@ -1,34 +1,33 @@
 <ion-header>
-    <ion-toolbar>
-      <ion-title>Risultati Ricerca</ion-title>
-      <ion-buttons slot="start">
-        <ion-button (click)="onCancel()">
-          <ion-icon name="close"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-      <ion-buttons slot="end">
-        <ion-button (click)="onMemo()" [disabled]="indexArray.length === 0">
-          <ion-icon name="bookmarks"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-  
-  <ion-content>
-    <ion-item>
+  <ion-toolbar>
+    <ion-title>Risultati Ricerca</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="onCancel()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="onMemo()" [disabled]="indexArray.length === 0">
+        <ion-icon name="bookmarks"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-text>
+      <h1 *ngIf="!(part)">Nell'indirizzo {{address}} {{listPoc.length > 0 ? 'si effettuano pulizia strade:' : 'non si effettuano pulizia strade'}}</h1>
+      <h1 *ngIf="part">Nell'indirizzo {{address}} tratto {{part}} {{listPoc.length > 0 ? 'si effettuano pulizia strade:' : 'non si effettuano pulizia strade'}}</h1>
+    </ion-text>
+  </ion-item>
+  <ion-list>
+    <ion-item *ngFor="let poc of listPoc">
       <ion-text>
-        <h1 *ngIf="!(part)">Nell'indirizzo {{address}} si effettuano pulizia strade:</h1>
-        <h1 *ngIf="part">Nell'indirizzo {{address}} tratto {{part}} si effettuano pulizia strade:</h1>
+        <p *ngIf="!(part)">{{poc | addressQuery: false}}</p>
+        <p *ngIf="part">{{poc | addressQuery: true}}</p>
       </ion-text>
+      <ion-checkbox slot="end" #box (ionChange)="onChange(box, poc)"></ion-checkbox>
     </ion-item>
-    <ion-list>
-      <ion-item *ngFor="let poc of listPoc">
-        <ion-text>
-          <p *ngIf="!(part)">{{poc.giorno_set}} nel tratto {{poc.tratto_str}} dalle ore {{poc.ora_inizio}} alle {{poc.ora_fine}}</p>
-          <p *ngIf="part">{{poc.giorno_set}} dalle ore {{poc.ora_inizio}} alle {{poc.ora_fine}}</p>
-        </ion-text>
-        <ion-checkbox slot="end" #box (ionChange)="onChange(box, poc)"></ion-checkbox>
-      </ion-item>
-    </ion-list>
-  </ion-content>
-  
+  </ion-list>
+</ion-content>

@@ -48,23 +48,23 @@ export class SearchDatePage {
 
   onSubmit(f: NgForm) {
     const listPoc = [];
+    const selectedDay = f.value.selectedDay;
+    const selectedTime = f.value.selectedTime.substring(11, 16);
     this.loadingCtrl.create({
       keyboardClose: true,
       message: 'Sto cercando...'
     }).then(loadingEl => {
       loadingEl.present();
-      this.db.getPocByDay(f.value.selectedDay).then((success: any) => {
+      this.db.getPocByDay(selectedDay).then((success: any) => {
         loadingEl.dismiss();
         success.forEach((childSnapshot: any) => {
           listPoc.push(childSnapshot.val());
         });
-        this.presentModal(f.value.selectedDay, f.value.selectedTime.substring(11, 16), listPoc);
-      }, (error: any) => {
+        this.presentModal(selectedDay, selectedTime, listPoc);
+      }, error => { // non funziona così
         loadingEl.dismiss();
         this.showService.showError('Ricerca Fallita');
       });
     });
-    // this.presentModal(f.value.selectedDay, f.value.selectedTime.substring(11, 16));
   }
-
 }

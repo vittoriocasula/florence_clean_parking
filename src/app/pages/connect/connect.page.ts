@@ -6,6 +6,8 @@ import { ShowService } from 'src/app/services/show.service';
 import { ConnectionService } from 'src/app/services/connection.service';
 import { DevicesService } from 'src/app/services/devices.service';
 import { PositionService } from 'src/app/services/position.service';
+import { Poc } from 'src/app/models/poc.model';
+import { FirebaseDbService } from 'src/app/services/firebase-db.service';
 
 @Component({
   selector: 'app-connect',
@@ -27,7 +29,8 @@ export class ConnectPage implements OnInit {
     private menuCtrl: MenuController,
     private connectionService: ConnectionService,
     private devicesService: DevicesService,
-    private positionService: PositionService
+    private positionService: PositionService,
+    private db: FirebaseDbService
   ) { }
 
   ngOnInit() {
@@ -114,7 +117,59 @@ export class ConnectPage implements OnInit {
             this.connectionService.connectionState = false; // TODO correggere il pulsante disconnetti nella home page
             const arduinoLat = this.positionService.getArduinoLat();
             const arduinoLng = this.positionService.getArduinoLng();
-            this.showService.showNotification('Disconnesso', 'lat=' + arduinoLat + ', lng=' + arduinoLng);
+            this.positionService.getStreet(arduinoLat, arduinoLng).subscribe(httpSuccess => {
+              // tslint:disable-next-line: no-string-literal
+              const address = httpSuccess['address']['road'];
+              // this.showService.showNotification('Disconnesso', address);
+              console.log(address);
+              this.db.getPocByAddress(address.trim().toUpperCase()).then(dbSuccess => {
+                /* const currentListPoc: Poc[] = []; // li notifico subito
+                const imminentListPoc: Poc[] = []; // li notifico subito
+                const futureListPoc: Poc[] = []; // li notifico un ora prima di quando avvengono
+                // in questo caso i tratti identificano un posto, dato che la via è uguale per tutti
+                const advertisedPartArray = []; // l'array dei tratti da notificare subito
+                const unadvertisedPartArray = []; // l'array dei tratti da notificare in futuro
+                const times = []; // lo mantengo per non ricalcolare i missingMinutes
+                dbSuccess.forEach((childSnapshot: any) => {
+                  const poc: Poc = childSnapshot.val();
+                  const missingMinutes = poc.getMissingMinutes();
+                  if (missingMinutes === 0) {
+                    currentListPoc.push(poc);
+                    advertisedPartArray.push(poc.tratto_str);
+                  }
+                  if (missingMinutes <= 60 && missingMinutes > 0) {
+                    imminentListPoc.push(poc);
+                    advertisedPartArray.push(poc.tratto_str);
+                  }
+                  if (missingMinutes > 60) {
+                    if (advertisedPartArray.indexOf(poc.tratto_str) === -1) {
+                      const index = unadvertisedPartArray.indexOf(poc.tratto_str);
+                      if (index === -1) {
+                        futureListPoc.push(poc);
+                        unadvertisedPartArray.push(poc.tratto_str);
+                        times.push(missingMinutes);
+                      } else {
+                        if (missingMinutes < times[index]) {
+                          times[index] = missingMinutes;
+                          futureListPoc[index] = poc;
+                        }
+                      }
+                    }
+                  }
+                });
+                console.log(currentListPoc);
+                console.log(imminentListPoc);
+                console.log(futureListPoc); */
+                // i poc in currentListPoc sono già raggruppati li notifico tutti insieme
+                // i poc in imminentListPoc sono già raggruppati devono mostrare nella notifica i missingTimes
+                // i futureListPoc vanno raggruppati per missingMinutes e notificati un ora prima()
+              }, dbError => {
+                // db request fallisce
+              });
+            }, httpError => {
+              this.showService.showNotification('Disconnesso', 'lat=' + arduinoLat + ' lng=' + arduinoLng);
+              // http request fallisce
+            });
           } else {
             loadingEl.dismiss();
             this.showService.showError('impossibile connettersi a questo dispositivo!');

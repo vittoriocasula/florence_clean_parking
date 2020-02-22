@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { SearchAddressPage } from './search-address.page';
 import { AddressResultComponent } from './address-result/address-result.component';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 const routes: Routes = [
   {
@@ -17,6 +18,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    PipesModule,
     CommonModule,
     FormsModule,
     IonicModule,

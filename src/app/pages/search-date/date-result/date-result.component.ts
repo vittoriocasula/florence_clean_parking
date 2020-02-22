@@ -23,27 +23,97 @@ export class DateResultComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.time) { // filtro le ore
-      const selectedTime: string[] = this.time.split(':');
-      const selectedHour: number = +selectedTime[0];
-      const selectedMinutes: number = +selectedTime[1];
-      this.listPoc = this.listPoc.filter((poc: Poc) => { // true quando lo voglio
-        let isContained = true;
-        const timeStart: string[] = poc.ora_inizio.split(':');
-        const hourStart: number = +timeStart[0];
-        const minutesStart: number = +timeStart[1];
-        const timeEnd: string[] = poc.ora_fine.split(':');
-        const hourEnd: number = +timeEnd[0];
-        const minutesEnd: number = +timeEnd[1];
+    this.listPoc = this.listPoc.filter(poc => {
+      let isValid: boolean;
+      if (poc.sett_mese !== '') {
+        const selectedWeek = this.getSelectedWeek();
+        isValid = false;
+        const weeks = poc.sett_mese.split(',');
+        weeks.forEach(week => {
+          if (selectedWeek === +week) {
+            isValid = true;
+          }
+        });
+      } else {
+        const selectedDate = this.getSelectedDate();
+        if (poc.giorno_pari === '1') {
+          isValid = (selectedDate.getDate() % 2) === 0;
+        }
+        if (poc.giorno_dispari === '1') {
+          isValid = (selectedDate.getDate() % 2) === 1;
+        }
+        if (poc.giorno_dispari === '1' && poc.giorno_pari === '1') {
+          isValid = true;
+        }
+      }
+      if (this.time && isValid) {
+        const selectedHour = +this.time.split(':')[0];
+        const selectedMinutes = +this.time.split(':')[1];
+        const hourStart = +poc.ora_inizio.split(':')[0];
+        const minutesStart = +poc.ora_inizio.split(':')[1];
+        const hourEnd = +poc.ora_fine.split(':')[0];
+        const minutesEnd = +poc.ora_fine.split(':')[1];
         if (this.timeLower(selectedHour, selectedMinutes, hourStart, minutesStart)) {
-          isContained = false;
+          isValid = false;
         }
         if (this.timeGreater(selectedHour, selectedMinutes, hourEnd, minutesEnd)) {
-          isContained = false;
+          isValid = false;
         }
-        return isContained;
-      });
+      }
+      return isValid;
+    });
+  }
+
+  private getSelectedWeek() {
+    const selectedDate = this.getSelectedDate();
+    let selectedDay = selectedDate.getDate() - 7;
+    let selectedWeek = 1;
+    while (selectedDay > 0) {
+      selectedWeek++;
+      selectedDay -= 7;
     }
+    return selectedWeek;
+  }
+
+  private getSelectedDate(): Date {
+    const days = ['LUNEDI\'', 'MARTEDI\'', 'MERCOLEDI\'', 'GIOVEDI\'', 'VENERDI\'', 'SABATO', 'DOMENICA'];
+    const dayOfMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let selectedHour: number;
+    let selectedMinutes: number;
+    if (this.time) {
+      selectedHour = +this.time.split(':')[0];
+      selectedMinutes = +this.time.split(':')[1];
+    }
+    const currentDate = new Date();
+    let selectedMonth = currentDate.getMonth();
+    let selectedYear = currentDate.getFullYear();
+    if (this.isLeapYear(selectedYear)) {
+      dayOfMonths[1]++;
+    }
+    let selectedDay = currentDate.getDate() + (days.indexOf(this.day) + 8 - currentDate.getDay()) % 7;
+    if (selectedDay > dayOfMonths[selectedMonth]) {
+      selectedDay -= dayOfMonths[selectedMonth];
+      selectedMonth++;
+      if (selectedMonth === 12) {
+        selectedMonth = 0;
+        selectedYear++;
+      }
+    }
+    let selectedDate: Date;
+    if (this.time) {
+      selectedDate = new Date(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinutes);
+    } else {
+      selectedDate = new Date(selectedYear, selectedMonth, selectedDay);
+    }
+    return selectedDate;
+  }
+
+  private isLeapYear(year: number) {
+    let isLeap = false;
+    if (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)) {
+      isLeap = true;
+    }
+    return isLeap;
   }
 
   private timeGreater(hourTarget: number, minutesTarget: number, hour: number, minutes: number) {

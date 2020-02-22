@@ -17,8 +17,7 @@
 <ion-content>
   <ion-item>
     <ion-text>
-      <h1 *ngIf="!(time)">{{day}} c'è pulizia strade nelle seguenti zone:</h1>
-      <h1 *ngIf="time">{{day}} alle {{time}} c'è pulizia strade nelle seguenti zone:</h1>
+      <h1>{{day | dateHeader: time}}</h1>
     </ion-text>
   </ion-item>
   <ion-list>

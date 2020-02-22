@@ -49,12 +49,11 @@ export class SearchAddressPage {
           listPoc.push(childSnapshot.val());
         });
         this.presentModal(f.form.value.address, f.form.value.part, listPoc);
-      }, (error: any) => {
+      }, (error: any) => { // non funziona così
         loadingEl.dismiss();
         this.showService.showError('Ricerca Fallita');
       });
     });
   }
-
 
 }

@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { SearchDatePage } from './search-date.page';
 import { DateResultComponent } from './date-result/date-result.component';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 const routes: Routes = [
   {
@@ -17,6 +18,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    PipesModule,
     CommonModule,
     FormsModule,
     IonicModule,
