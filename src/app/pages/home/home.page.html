@@ -31,7 +31,7 @@
             </ion-item>
             <ion-item *ngIf="!(connectionService.connectionState)" lines="none">
                 <ion-button class="bluetooth-buttons" (click)="onConnect()" slot="end">
-                  Connetti
+                  <ion-label>Connetti</ion-label>
                   <ion-icon slot="start" name="bluetooth"></ion-icon>
                 </ion-button>
             </ion-item>

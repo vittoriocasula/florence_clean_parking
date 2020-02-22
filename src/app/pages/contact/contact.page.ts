@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-contact',
@@ -24,11 +23,9 @@ export class ContactPage implements OnInit {
   ];
 
   constructor(
-    private menuCtrl: MenuController
   ) { }
 
   ngOnInit() {
-    this.menuCtrl.swipeGesture(false);
   }
 
 }

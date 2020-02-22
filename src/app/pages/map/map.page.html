@@ -4,10 +4,23 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Mappa</ion-title>
+    <ion-buttons slot="end">  
+      <ion-button id="currentPos" (click)="setArduinoPosition()" >
+        <ion-icon slot="icon-only" name="car" color="dark"></ion-icon>
+      </ion-button>
+      <ion-button id="currentPos" (click)="setViewCurrentPosition()" >
+        <ion-icon slot="icon-only" name="locate" color="dark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  
+
+  <div *ngIf="!networkAvailable">
+    <ion-card>
+      <ion-card-content>Collegati ad una rete Wifi oppure utilizza una rete cellulare.</ion-card-content>
+    </ion-card>
+  </div>
   <div id="map"></div>
 </ion-content>

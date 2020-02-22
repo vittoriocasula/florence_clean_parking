@@ -70,7 +70,8 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.db.initFirebaseDb();
-      this.statusBar.styleDefault();
+      // this.statusBar.styleDefault();
+      this.statusBar.backgroundColorByHexString('#ffffff');
       // provo a connettermi automaticamente
       // setta arduinoLat e arduinoLng
       this.splashScreen.hide();
