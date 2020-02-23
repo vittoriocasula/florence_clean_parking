@@ -121,9 +121,14 @@ export class ConnectPage implements OnInit {
             this.positionService.getStreet(arduinoLat, arduinoLng).subscribe(httpSuccess => {
               // tslint:disable-next-line: no-string-literal
               const address = httpSuccess['address']['road'];
-              // this.showService.showNotification('Disconnesso', address);
               console.log(address);
               this.db.getPocByAddress(address.trim().toUpperCase()).then(dbSuccess => {
+                const listPoc1 = [];
+                const listPoc2 = [];
+                const currentDate = new Date();
+                dbSuccess.forEach((childSnapshot: any) => {
+                  const poc: Poc = childSnapshot.val();
+                });
                 /* const currentListPoc: Poc[] = []; // li notifico subito
                 const imminentListPoc: Poc[] = []; // li notifico subito
                 const futureListPoc: Poc[] = []; // li notifico un ora prima di quando avvengono

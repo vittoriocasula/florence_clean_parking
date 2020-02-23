@@ -68,18 +68,18 @@ export class HomePage {
   handleData(data: string) {
     const message = data.split(':');
     if (message[0] === 'lat') {
-      let realLat: string;
-      realLat = message[1].trim().replace('\n', '');
-      realLat = Array.from(realLat).splice(1, realLat.length - 2).join('');
-      this.positionService.setArduinoLat(realLat);
-      this.storage.set('arduinoLat', realLat);
+      let arduinoLat: string;
+      arduinoLat = message[1].trim().replace('\n', '');
+      arduinoLat = Array.from(arduinoLat).splice(1, arduinoLat.length - 2).join('');
+      this.positionService.setArduinoLat(arduinoLat);
+      this.storage.set('arduinoLat', arduinoLat);
       // this.positionService.setArduinoLat(message[1]);
     } else {
-      let realLng: string;
-      realLng = message[1].trim().replace('\n', '');
-      realLng = Array.from(realLng).splice(1, realLng.length - 2).join('');
-      this.positionService.setArduinoLat(realLng);
-      this.storage.set('arduinoLng', realLng);
+      let arduinoLng: string;
+      arduinoLng = message[1].trim().replace('\n', '');
+      arduinoLng = Array.from(arduinoLng).splice(1, arduinoLng.length - 2).join('');
+      this.positionService.setArduinoLat(arduinoLng);
+      this.storage.set('arduinoLng', arduinoLng);
       // this.positionService.setArduinoLng(message[1]);
     }
   }

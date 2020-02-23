@@ -53,10 +53,7 @@
         </ion-item>
         <ion-list *ngIf="memos.length > 0">
           <ion-item *ngFor="let memo of memos">
-            <ion-text>
-              {{memo.giorno_set}} dalle {{memo.ora_inizio}} alle {{memo.ora_fine}} in {{memo.indirizzo}}
-              {{memo.tratto_str ? 'nel tratto ' + memo.tratto_str : ''}} c'è pulizia strade
-            </ion-text>
+            <ion-text>In {{memo.indirizzo}} c'è pulizia strade {{memo | addressQuery: false}}</ion-text>
             <ion-buttons>
               <ion-button (click)="onCancel(memo)">
                 <ion-icon name="close"></ion-icon>

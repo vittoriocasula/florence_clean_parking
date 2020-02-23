@@ -6,9 +6,11 @@ import { RouterModule } from '@angular/router';
 import { TutorialComponent } from './tutorial/tutorial.component';
 
 import { HomePage } from './home.page';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 @NgModule({
   imports: [
+    PipesModule,
     CommonModule,
     FormsModule,
     IonicModule,
