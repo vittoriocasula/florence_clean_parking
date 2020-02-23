@@ -1,0 +1,40 @@
+ion-card {
+    padding-top: 20px;
+    border: 1px solid var(--color-alia-green);
+    height: 100%;
+    width: 320px;
+    border-radius: 30px;
+  }
+  
+  ion-card-title {
+    color: var(--color-arduino-grey);
+    font-weight: bolder;
+  }
+  
+  ion-slides {
+    padding-bottom: 30px;
+    --bullet-background: var(--color-arduino-grey);
+    --bullet-background-active: var(--color-alia-green);
+    height: 99%;
+  }
+  
+  ion-item > ion-icon{
+    color: var(--color-florence-red);
+  }
+  
+  ion-item > ion-avatar { 
+      width: 60px;  
+      height: 60px; 
+  }
+  
+  #go{
+    margin-top: 100px;
+    --background : var(--color-alia-green);
+    width: 150px;  
+    height: 150px;
+    font-size: 30px;
+  }
+
+  .features, .requirements{
+    font-size: small;
+  }

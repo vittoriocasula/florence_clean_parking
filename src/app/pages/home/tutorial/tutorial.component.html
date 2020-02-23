@@ -9,10 +9,131 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-card>
-    <ion-label>
-      Put Tutorial here!
-    </ion-label>
-  </ion-card>
+<ion-content fullscreen padding scroll-y="false">
+  <ion-slides pager="true" [options]="slideOpts">
+
+    <ion-slide>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Florence Clean Parking</ion-card-title>
+          <ion-card-subtitle>Benvenuto in questo breve tutorial!</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-img [src]="iconUrl"></ion-img>
+          <ion-label>Con questa app potrai parcheggiare la tua auto rispettando gli orari di pulizia strade della città
+            di Firenze! </ion-label>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Florence Clean Parking</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list-header>
+            Funzionalità offerte:
+          </ion-list-header>
+          <ion-list lines="none">
+            <ion-item>
+              <ion-icon name="bluetooth" slot="start"></ion-icon>
+              <ion-label class="features" text-wrap>
+                Connessione ad un modulo bluetooth posto all'interno dell'automobile, per notificarti in caso di sosta
+                in una zona soggetta a pulizia stradale
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-icon name="map" slot="start"></ion-icon>
+              <ion-label class="features" text-wrap>
+                Controllo in tempo reale della tua posizione e della zona in cui hai parcheggiato l'auto attraverso una mappa.
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-icon name="clipboard" slot="start"></ion-icon>
+              <ion-label class="features" text-wrap>
+                Possibilità di aggiungere le tue strade preferite ad un promemoria
+              </ion-label>
+            </ion-item>
+            
+            <ion-item>
+              <ion-icon name="pin" slot="start"></ion-icon>
+              <ion-label class="features" text-wrap>
+                Ricerca dell'orario di pulizia di una specifica strada
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-icon name="calendar" slot="start"></ion-icon>
+              <ion-label class="features" text-wrap>
+                Ricerca della prossima pulizie di tutte le strade, in un dato giorno ad uno specifico orario
+              </ion-label>
+            </ion-item>
+
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Florence Clean Parking</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list-header>
+            Requisiti
+          </ion-list-header>
+          <ion-list lines="none">
+              <ion-item>
+                  <ion-avatar slot="start">
+                    <ion-img [src]="imgArduino"></ion-img>
+                  </ion-avatar>
+                  <ion-label class="requirements" text-wrap>
+                    Arduino UNO
+                  </ion-label>
+                </ion-item>
+            <ion-item>
+              <ion-avatar slot="start">
+                <ion-img [src]="imgSensorGPS"></ion-img>
+              </ion-avatar>
+              <ion-label class="requirements" text-wrap>
+                Sensore GPS
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-avatar slot="start">
+                <ion-img [src]="imgModuleBluetooth"></ion-img>
+              </ion-avatar>
+              <ion-label class="requirements" text-wrap>
+                Modulo Bluetooth HC-06
+              </ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-avatar slot="start">
+                  <ion-img [src]="imgKit"></ion-img>
+                </ion-avatar>
+                <ion-label class="requirements" text-wrap>
+                  Vari cavi, resistenze, Breadboard, ecc...
+                </ion-label>
+              </ion-item>
+          </ion-list>
+          <ion-label>Questi componenti garantiscono la funzionalità di notifica in zona soggetta a pulizia stradale. Se non hai già questi componenti, entra nella sezione "Contattaci" dell'app.</ion-label>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+
+    <ion-slide> <ion-card>
+        <ion-card-header>
+          <ion-card-title>Florence Clean Parking</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+      <ion-button id="go" large (click)='onCancel()' shape="round">
+        <ion-icon slot="end" name="arrow-round-forward"></ion-icon>Go
+      </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+
+  </ion-slides>
 </ion-content>
+
