@@ -117,6 +117,7 @@ export class ConnectPage implements OnInit {
             this.connectionService.connectionState = false; // TODO correggere il pulsante disconnetti nella home page
             const arduinoLat = this.positionService.getArduinoLat();
             const arduinoLng = this.positionService.getArduinoLng();
+            // mettere arduinoLat e arduinoLng sul localStorage
             this.positionService.getStreet(arduinoLat, arduinoLng).subscribe(httpSuccess => {
               // tslint:disable-next-line: no-string-literal
               const address = httpSuccess['address']['road'];

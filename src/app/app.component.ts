@@ -5,6 +5,8 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Pages } from './models/pages.model';
 import { FirebaseDbService } from './services/firebase-db.service';
+import { Storage } from '@ionic/storage';
+import { PositionService } from './services/position.service';
 
 @Component({
   selector: 'app-root',
@@ -62,7 +64,9 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private db: FirebaseDbService
+    private db: FirebaseDbService,
+    private storage: Storage,
+    private positionService: PositionService
   ) {
     this.initializeApp();
   }
@@ -74,6 +78,16 @@ export class AppComponent {
       this.statusBar.backgroundColorByHexString('#ffffff');
       // provo a connettermi automaticamente
       // setta arduinoLat e arduinoLng
+      this.storage.get('ardinoLat').then((arduinoLat: string) => {
+        if (arduinoLat) {
+          this.positionService.setArduinoLat(arduinoLat);
+        }
+      });
+      this.storage.get('arduinoLng').then((arduinoLng: string) => {
+        if (arduinoLng) {
+          this.positionService.setArduinoLng(arduinoLng);
+        }
+      });
       this.splashScreen.hide();
     });
     this.platform.pause.subscribe(() => {

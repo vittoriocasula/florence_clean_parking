@@ -3,39 +3,60 @@ import { Poc } from '../models/poc.model';
 
 @Pipe({name: 'addressQuery'})
 export class AddressQueryPipe implements PipeTransform {
-  transform(value: Poc, arg: boolean): string {
+  transform(poc: Poc, part: boolean): string {
     let text: string;
-    if (arg) {
-        if (value.sett_mese !== '') {
-            text = 'Il ' + value.sett_mese.replace(',', '° e il ') + '° ' + value.giorno_set + ' del mese ';
-            text += ' dalle ore ' + value.ora_inizio + ' alle ' + value.ora_fine;
+    if (part) {
+        if (poc.sett_mese !== '') {
+            if (poc.giorno_set === 'DOMENICA') {
+                text = 'La ' + poc.sett_mese.replace(',', '° e la ') + '° ' + poc.giorno_set;
+            } else {
+                text = 'Il ' + poc.sett_mese.replace(',', '° e il ') + '° ' + poc.giorno_set;
+            }
+            text += ' del mese dalle ore ' + poc.ora_inizio + ' alle ' + poc.ora_fine;
         } else {
-            if (value.giorno_pari === '1') {
-                text = 'Ogni ' + value.giorno_set + ' pari del mese dalle ore ' + value.ora_inizio + ' alle ' + value.ora_fine;
+            if (poc.giorno_pari === '1') {
+                text = 'Ogni ' + poc.giorno_set + ' pari del mese dalle ore ' + poc.ora_inizio + ' alle ' + poc.ora_fine;
             }
-            if (value.giorno_dispari === '1') {
-                text = 'Ogni ' + value.giorno_set + ' dispari del mese dalle ore ' + value.ora_inizio + ' alle ' + value.ora_fine;
+            if (poc.giorno_dispari === '1') {
+                text = 'Ogni ' + poc.giorno_set + ' dispari del mese dalle ore ' + poc.ora_inizio + ' alle ' + poc.ora_fine;
             }
-            if (value.giorno_dispari === '1' && value.giorno_pari === '1') {
-                text = 'Ogni ' + value.giorno_set + ' del mese dalle ore ' + value.ora_inizio + ' alle ' + value.ora_fine;
+            if (poc.giorno_dispari === '1' && poc.giorno_pari === '1') {
+                text = 'Ogni ' + poc.giorno_set + ' del mese dalle ore ' + poc.ora_inizio + ' alle ' + poc.ora_fine;
             }
         }
     } else {
-        if (value.sett_mese !== '') {
-            text = 'Il ' + value.sett_mese.replace(',', '° e il ') + '° ' + value.giorno_set + ' del mese ';
-            text += 'nel tratto ' + value.tratto_str + 'dalle ore ' + value.ora_inizio + ' alle ' + value.ora_fine;
+        if (poc.sett_mese !== '') {
+            if (poc.giorno_set === 'DOMENICA') {
+                text = 'La ' + poc.sett_mese.replace(',', '° e la ') + '° ' + poc.giorno_set;
+            } else {
+                text = 'Il ' + poc.sett_mese.replace(',', '° e il ') + '° ' + poc.giorno_set;
+            }
+            text += ' del mese';
+            if (poc.tratto_str !== '') {
+                text += ' nel tratto ' + poc.tratto_str;
+            }
+            text += ' dalle ore ' + poc.ora_inizio + ' alle ' + poc.ora_fine;
         } else {
-            if (value.giorno_pari === '1') {
-                text = 'Ogni ' + value.giorno_set + ' pari del mese nel tratto ' + value.tratto_str;
-                text += ' dalle ore ' + value.ora_inizio + ' alle ' + value.ora_fine;
+            if (poc.giorno_pari === '1') {
+                text = 'Ogni ' + poc.giorno_set + ' pari del mese';
+                if (poc.tratto_str !== '') {
+                    text += ' nel tratto ' + poc.tratto_str;
+                }
+                text += ' dalle ore ' + poc.ora_inizio + ' alle ' + poc.ora_fine;
             }
-            if (value.giorno_dispari === '1') {
-                text = 'Ogni ' + value.giorno_set + ' dispari del mese nel tratto ' + value.tratto_str;
-                text += ' dalle ore ' + value.ora_inizio + ' alle ' + value.ora_fine;
+            if (poc.giorno_dispari === '1') {
+                text = 'Ogni ' + poc.giorno_set + ' dispari del mese';
+                if (poc.tratto_str !== '') {
+                    text += ' nel tratto ' + poc.tratto_str;
+                }
+                text += ' dalle ore ' + poc.ora_inizio + ' alle ' + poc.ora_fine;
             }
-            if (value.giorno_dispari === '1' && value.giorno_pari === '1') {
-                text = 'Ogni ' + value.giorno_set + ' del mese nel tratto ' + value.tratto_str;
-                text += ' dalle ore ' + value.ora_inizio + ' alle ' + value.ora_fine;
+            if (poc.giorno_dispari === '1' && poc.giorno_pari === '1') {
+                text = 'Ogni ' + poc.giorno_set + ' del mese';
+                if (poc.tratto_str !== '') {
+                    text += ' nel tratto ' + poc.tratto_str;
+                }
+                text += ' dalle ore ' + poc.ora_inizio + ' alle ' + poc.ora_fine;
             }
         }
     }

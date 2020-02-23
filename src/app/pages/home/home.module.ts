@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
+import { TutorialComponent } from './tutorial/tutorial.component';
 
 import { HomePage } from './home.page';
 
@@ -18,6 +19,7 @@ import { HomePage } from './home.page';
       }
     ])
   ],
-  declarations: [HomePage]
+  declarations: [HomePage, TutorialComponent],
+  entryComponents: [TutorialComponent]
 })
 export class HomePageModule {}
