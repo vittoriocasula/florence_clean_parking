@@ -4,6 +4,8 @@ ion-card {
     height: 100%;
     width: 320px;
     border-radius: 30px;
+    overflow-y: scroll; 
+    display: block; 
   }
   
   ion-card-title {
