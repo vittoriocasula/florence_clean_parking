@@ -1,14 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ChangeDetectorRef } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
 import { LocalNotifications, ILocalNotification } from '@ionic-native/local-notifications/ngx';
 import { Poc } from '../models/poc.model';
+import { Storage } from '@ionic/storage';
+import { Subject } from 'rxjs';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShowService {
 
+  private storageSub = new Subject<string>();
+
   constructor(
+    private localStorage: LocalStorageService,
+    private storage: Storage,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
     private localNotifications: LocalNotifications
@@ -46,8 +53,6 @@ export class ShowService {
     });
   }
 
-
-
   showNotification1(poc: Poc) {
     this.localNotifications.schedule([
       {
@@ -65,7 +70,16 @@ export class ShowService {
       this.localNotifications.clear(1);
     });
     this.localNotifications.on('button2').subscribe(() => {
-      console.log('Aggiungi a Local Storage');
+      this.storage.get('listPoc').then((memos: Poc[]) => {
+        if (memos) {
+          if (!(memos.find(memo => memo.id === poc.id))) {
+            memos.push(poc);
+          }
+        } else {
+          memos = [];
+          memos.push(poc);
+        }
+      });
       this.localNotifications.clear(1);
     });
   }
@@ -83,7 +97,16 @@ export class ShowService {
     ]
     );
     this.localNotifications.on('button1').subscribe(() => {
-      console.log('Aggiungi a Local Storage');
+      this.storage.get('listPoc').then((memos: Poc[]) => {
+        if (memos) {
+          if (!(memos.find(memo => memo.id === poc.id))) {
+            memos.push(poc);
+          }
+        } else {
+          memos = [];
+          memos.push(poc);
+        }
+      });
       this.localNotifications.clear(1);
     });
   }
@@ -94,7 +117,7 @@ export class ShowService {
     for (i = 0; i < listPoc.length; i++) {
       arrayNotification.push({
         id: i,
-        title: 'Attenzione!' + (i + 1).toString(),
+        title: 'Attenzione!',
         text: this.pocToText(listPoc[i]),
         actions: [
           { id: 'button' + i.toString(), title: 'Aggiungi a Promemoria' }
@@ -114,9 +137,23 @@ export class ShowService {
       arrayNotification
     );
     for (i = 0; i < listPoc.length; i++) {
+      const j = i;
       this.localNotifications.on('button' + i.toString()).subscribe(() => {
-        console.log('Aggiungi a Local Storage listPoc[i]');
+        this.storage.get('listPoc').then((memos: Poc[]) => {
+          if (memos) {
+            if (!(memos.find(memo => memo.id === listPoc[j].id))) {
+              memos.push(listPoc[j]);
+            }
+          } else {
+            memos = [];
+            memos.push(listPoc[j]);
+          }
+          /*this.storage.set('listPoc', memos);
+          this.storageSub.next('added');*/
+          this.localStorage.setItem('listPoc', memos);
+        });
         this.localNotifications.clear(i);
+
       });
     }
 
@@ -170,7 +207,31 @@ export class ShowService {
     );
 
     for (i = 0; i < (currentListPoc.length + futureListPoc.length); i++) {
+      const j = i;
       this.localNotifications.on('button' + i.toString()).subscribe(() => {
+        if (i < futureListPoc.length) {
+          this.storage.get('listPoc').then((memos: Poc[]) => {
+            if (memos) {
+              if (!(memos.find(memo => memo.id === futureListPoc[j].id))) {
+                memos.push(futureListPoc[j]);
+              }
+            } else {
+              memos = [];
+              memos.push(futureListPoc[j]);
+            }
+          });
+        } else {
+          this.storage.get('listPoc').then((memos: Poc[]) => {
+            if (memos) {
+              if (!(memos.find(memo => memo.id === currentListPoc[j - futureListPoc.length].id))) {
+                memos.push(currentListPoc[j - futureListPoc.length]);
+              }
+            } else {
+              memos = [];
+              memos.push(currentListPoc[j - futureListPoc.length]);
+            }
+          });
+        }
         console.log('Aggiungi a Local Storage listPoc[i]');
         this.localNotifications.clear(i);
       });

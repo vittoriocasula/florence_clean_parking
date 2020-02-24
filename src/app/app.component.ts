@@ -74,10 +74,7 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.db.initFirebaseDb();
-      // this.statusBar.styleDefault();
       this.statusBar.backgroundColorByHexString('#ffffff');
-      // provo a connettermi automaticamente
-      // setta arduinoLat e arduinoLng
       this.storage.get('arduinoLat').then((arduinoLat: string) => {
         if (arduinoLat) {
           this.positionService.setArduinoLat(arduinoLat);
@@ -88,15 +85,11 @@ export class AppComponent {
           this.positionService.setArduinoLng(arduinoLng);
         }
       });
+      // provo a connettermi automaticamente
       this.splashScreen.hide();
     });
     this.platform.pause.subscribe(() => {
       this.db.disconnectFirebaseDb();
     });
   }
-
-
-
-
-
 }

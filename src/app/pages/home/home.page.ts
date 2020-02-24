@@ -8,6 +8,7 @@ import { ConnectionService } from 'src/app/services/connection.service';
 import { PositionService } from 'src/app/services/position.service';
 import { Poc } from 'src/app/models/poc.model';
 import { Storage } from '@ionic/storage';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +21,7 @@ export class HomePage {
   memos: Poc[] = [];
 
   constructor(
+    private localStorage: LocalStorageService,
     private modalCtrl: ModalController,
     private bluetoothSerial: BluetoothSerial,
     private router: Router,
@@ -41,6 +43,17 @@ export class HomePage {
         this.showService.showError(error);
       });
     }
+    this.localStorage.watchStorage().subscribe((message: string) => {
+      if (message === 'added') {
+        this.localStorage.getItem('listPoc').then((listPoc) => {
+          if (listPoc) {
+            this.memos = listPoc;
+          } else {
+            this.memos = [];
+          }
+        });
+      }
+    });
     this.storage.get('listPoc').then((listPoc: Poc[]) => {
       if (listPoc) {
         this.memos = listPoc;

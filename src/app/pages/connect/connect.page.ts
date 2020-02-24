@@ -106,6 +106,7 @@ export class ConnectPage implements OnInit {
   onConnect() {
     this.bluetoothSerial.isEnabled().then(success => {
       const selectedMac = this.radio.value;
+      this.storage.set('lastMacDevice', selectedMac);
       this.loadingCtrl.create({
         keyboardClose: true,
         message: 'Mi sto connettendo...'
@@ -195,9 +196,17 @@ export class ConnectPage implements OnInit {
                     console.log('\n');
                   });
                   if (numPart === 1) {
-                    // notifica 1 o 2
+                    if (currentListPoc.length === 1) {
+                      this.showService.showNotification1(currentListPoc[0]);
+                    } else {
+                      this.showService.showNotification2(futureListPoc[0]);
+                    }
                   } else {
-                    // notifica 3 o 4
+                    if (currentListPoc.length === 0) {
+                      this.showService.showNotification3(futureListPoc);
+                    } else {
+                      this.showService.showNotification4(currentListPoc, futureListPoc);
+                    }
                   }
                 });
               }
