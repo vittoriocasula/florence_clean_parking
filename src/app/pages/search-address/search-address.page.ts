@@ -5,6 +5,7 @@ import { NgForm } from '@angular/forms';
 import { Poc } from 'src/app/models/poc.model';
 import { FirebaseDbService } from 'src/app/services/firebase-db.service';
 import { ShowService } from 'src/app/services/show.service';
+import { Network } from '@ionic-native/network/ngx';
 
 @Component({
   selector: 'app-search-address',
@@ -14,6 +15,7 @@ import { ShowService } from 'src/app/services/show.service';
 export class SearchAddressPage {
 
   constructor(
+    private network: Network,
     private modalCtrl: ModalController,
     private loadingCtrl: LoadingController,
     private db: FirebaseDbService,
@@ -42,17 +44,18 @@ export class SearchAddressPage {
       keyboardClose: true,
       message: 'Sto cercando...'
     }).then(loadingEl => {
-      loadingEl.present();
-      this.db.getPocByAddress(f.form.value.address.trim().toUpperCase()).then((success: any) => {
-        loadingEl.dismiss();
-        success.forEach((childSnapshot: any) => {
-          listPoc.push(childSnapshot.val());
+      if (this.network.type === 'none') {
+        this.showService.showError('Connessione assente');
+      } else {
+        loadingEl.present();
+        this.db.getPocByAddress(f.form.value.address.trim().toUpperCase()).then((success: any) => {
+          loadingEl.dismiss();
+          success.forEach((childSnapshot: any) => {
+            listPoc.push(childSnapshot.val());
+          });
+          this.presentModal(f.form.value.address, f.form.value.part, listPoc);
         });
-        this.presentModal(f.form.value.address, f.form.value.part, listPoc);
-      }, (error: any) => { // non funziona così
-        loadingEl.dismiss();
-        this.showService.showError('Ricerca Fallita');
-      });
+      }
     });
   }
 

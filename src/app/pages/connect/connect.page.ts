@@ -8,6 +8,8 @@ import { DevicesService } from 'src/app/services/devices.service';
 import { PositionService } from 'src/app/services/position.service';
 import { Poc } from 'src/app/models/poc.model';
 import { FirebaseDbService } from 'src/app/services/firebase-db.service';
+import { Storage } from '@ionic/storage';
+import { Network } from '@ionic-native/network/ngx';
 
 @Component({
   selector: 'app-connect',
@@ -22,6 +24,8 @@ export class ConnectPage implements OnInit {
   isDiscovering: boolean;
 
   constructor(
+    private network: Network,
+    private storage: Storage,
     private bluetoothSerial: BluetoothSerial,
     private showService: ShowService,
     private loadingCtrl: LoadingController,
@@ -117,61 +121,86 @@ export class ConnectPage implements OnInit {
             this.connectionService.connectionState = false; // TODO correggere il pulsante disconnetti nella home page
             const arduinoLat = this.positionService.getArduinoLat();
             const arduinoLng = this.positionService.getArduinoLng();
+            this.storage.set('arduinoLat', arduinoLat);
+            this.storage.set('arduinoLng', arduinoLng);
             // mettere arduinoLat e arduinoLng sul localStorage
+            console.log(arduinoLat);
+            console.log(arduinoLng);
             this.positionService.getStreet(arduinoLat, arduinoLng).subscribe(httpSuccess => {
+              console.log(httpSuccess);
               // tslint:disable-next-line: no-string-literal
               const address = httpSuccess['address']['road'];
               console.log(address);
-              this.db.getPocByAddress(address.trim().toUpperCase()).then(dbSuccess => {
-                const listPoc1 = [];
-                const listPoc2 = [];
-                const currentDate = new Date();
-                dbSuccess.forEach((childSnapshot: any) => {
-                  const poc: Poc = childSnapshot.val();
-                });
-                /* const currentListPoc: Poc[] = []; // li notifico subito
-                const imminentListPoc: Poc[] = []; // li notifico subito
-                const futureListPoc: Poc[] = []; // li notifico un ora prima di quando avvengono
-                // in questo caso i tratti identificano un posto, dato che la via è uguale per tutti
-                const advertisedPartArray = []; // l'array dei tratti da notificare subito
-                const unadvertisedPartArray = []; // l'array dei tratti da notificare in futuro
-                const times = []; // lo mantengo per non ricalcolare i missingMinutes
-                dbSuccess.forEach((childSnapshot: any) => {
-                  const poc: Poc = childSnapshot.val();
-                  const missingMinutes = poc.getMissingMinutes();
-                  if (missingMinutes === 0) {
-                    currentListPoc.push(poc);
-                    advertisedPartArray.push(poc.tratto_str);
-                  }
-                  if (missingMinutes <= 60 && missingMinutes > 0) {
-                    imminentListPoc.push(poc);
-                    advertisedPartArray.push(poc.tratto_str);
-                  }
-                  if (missingMinutes > 60) {
-                    if (advertisedPartArray.indexOf(poc.tratto_str) === -1) {
-                      const index = unadvertisedPartArray.indexOf(poc.tratto_str);
-                      if (index === -1) {
-                        futureListPoc.push(poc);
-                        unadvertisedPartArray.push(poc.tratto_str);
-                        times.push(missingMinutes);
-                      } else {
-                        if (missingMinutes < times[index]) {
-                          times[index] = missingMinutes;
-                          futureListPoc[index] = poc;
+              if (this.network.type !== 'none') {
+                this.db.getPocByAddress(address.trim().toUpperCase()).then(dbSuccess => {
+                  const days = ['DOMENICA', 'LUNEDI\'', 'MARTEDI\'', 'MERCOLEDI\'', 'GIOVEDI\'', 'VENERDI\'', 'SABATO'];
+                  const currentListPoc = []; // quelli che sono in atto
+                  const futureListPoc = []; // quelli che non sono in atto
+                  const currentDate = new Date();
+                  const currentWeek = this.getCurrentWeek();
+                  console.log('currentWeek: ' + currentWeek);
+                  const currentHour = currentDate.getHours();
+                  const currentMinutes = currentDate.getMinutes();
+                  dbSuccess.forEach((childSnapshot: any) => {
+                    const poc: Poc = childSnapshot.val();
+                    const hourStart = +poc.ora_inizio.split(':')[0];
+                    const minutesStart = +poc.ora_inizio.split(':')[1];
+                    const hourEnd = +poc.ora_fine.split(':')[0];
+                    const minutesEnd = +poc.ora_fine.split(':')[1];
+                    let isCurrent = false;
+                    if (poc.giorno_set === days[currentDate.getDay()]) {
+                      isCurrent = this.timeLower(currentHour, currentMinutes, hourEnd, minutesEnd);
+                      if (isCurrent) {
+                        isCurrent = this.timeGreater(currentHour, currentMinutes, hourStart, minutesStart);
+                      }
+                      if (isCurrent) {
+                        isCurrent = false;
+                        console.log('le ore son giuste');
+                        if (poc.sett_mese !== '') {
+                          const weeks = poc.sett_mese.split(',');
+                          weeks.forEach(week => {
+                            if (currentWeek === +week) {
+                              isCurrent = true;
+                            }
+                          });
+                        } else {
+                          if (poc.giorno_pari === '1' && (currentDate.getDate() % 2) === 0) {
+                            isCurrent = true;
+                          }
+                          if (poc.giorno_dispari === '1' && (currentDate.getDate() % 2) === 1) {
+                            isCurrent = true;
+                          }
+                          if (poc.giorno_pari === '1' && poc.giorno_dispari === '1') {
+                            isCurrent = true;
+                          }
                         }
                       }
                     }
+                    if (isCurrent) {
+                      currentListPoc.push(poc);
+                    } else {
+                      futureListPoc.push(poc);
+                    }
+                  });
+                  const numPart = currentListPoc.length + futureListPoc.length;
+                  console.log('CURRENT:\n' + currentListPoc);
+                  currentListPoc.forEach(poc => {
+                    console.log(poc);
+                    console.log('\n');
+                  });
+                  console.log('-----------------------');
+                  console.log('FUTURE:\n');
+                  futureListPoc.forEach(poc => {
+                    console.log(poc);
+                    console.log('\n');
+                  });
+                  if (numPart === 1) {
+                    // notifica 1 o 2
+                  } else {
+                    // notifica 3 o 4
                   }
                 });
-                console.log(currentListPoc);
-                console.log(imminentListPoc);
-                console.log(futureListPoc); */
-                // i poc in currentListPoc sono già raggruppati li notifico tutti insieme
-                // i poc in imminentListPoc sono già raggruppati devono mostrare nella notifica i missingTimes
-                // i futureListPoc vanno raggruppati per missingMinutes e notificati un ora prima()
-              }, dbError => {
-                // db request fallisce
-              });
+              }
             }, httpError => {
               this.showService.showNotification('Disconnesso', 'lat=' + arduinoLat + ' lng=' + arduinoLng);
               // http request fallisce
@@ -186,6 +215,39 @@ export class ConnectPage implements OnInit {
       this.navCtrl.navigateBack('/menu/home');
       this.showService.showToast('Attiva il bluetooth');
     });
+  }
+
+  private getCurrentWeek() {
+    const currentDate = new Date();
+    let currentWeek = 1;
+    let currentDay = currentDate.getDate() - 7;
+    while (currentDay > 0) {
+      currentWeek++;
+      currentDay -= 7;
+    }
+    return currentWeek;
+  }
+
+  private timeGreater(hourTarget: number, minutesTarget: number, hour: number, minutes: number) {
+    let isGreater = false;
+    if (hourTarget > hour) {
+      isGreater = true;
+    }
+    if (hourTarget === hour && minutesTarget > minutes) {
+      isGreater = true;
+    }
+    return isGreater;
+  }
+
+  private timeLower(hourTarget: number, minutesTarget: number, hour: number, minutes: number) {
+    let isLower = false;
+    if (hourTarget < hour) {
+      isLower = true;
+    }
+    if (hourTarget === hour && minutesTarget < minutes) {
+      isLower = true;
+    }
+    return isLower;
   }
 
 }

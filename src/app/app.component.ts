@@ -78,7 +78,7 @@ export class AppComponent {
       this.statusBar.backgroundColorByHexString('#ffffff');
       // provo a connettermi automaticamente
       // setta arduinoLat e arduinoLng
-      this.storage.get('ardinoLat').then((arduinoLat: string) => {
+      this.storage.get('arduinoLat').then((arduinoLat: string) => {
         if (arduinoLat) {
           this.positionService.setArduinoLat(arduinoLat);
         }

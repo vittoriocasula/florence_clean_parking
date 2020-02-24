@@ -72,15 +72,11 @@ export class HomePage {
       arduinoLat = message[1].trim().replace('\n', '');
       arduinoLat = Array.from(arduinoLat).splice(1, arduinoLat.length - 2).join('');
       this.positionService.setArduinoLat(arduinoLat);
-      this.storage.set('arduinoLat', arduinoLat);
-      // this.positionService.setArduinoLat(message[1]);
     } else {
       let arduinoLng: string;
       arduinoLng = message[1].trim().replace('\n', '');
       arduinoLng = Array.from(arduinoLng).splice(1, arduinoLng.length - 2).join('');
-      this.positionService.setArduinoLat(arduinoLng);
-      this.storage.set('arduinoLng', arduinoLng);
-      // this.positionService.setArduinoLng(message[1]);
+      this.positionService.setArduinoLng(arduinoLng);
     }
   }
 
@@ -93,6 +89,10 @@ export class HomePage {
   }
 
   onDisconnect() {
+    const arduinoLat = this.positionService.getArduinoLat();
+    const arduinoLng = this.positionService.getArduinoLng();
+    this.storage.set('arduinoLat', arduinoLat);
+    this.storage.set('arduinoLng', arduinoLng);
     this.bluetoothSerial.disconnect();
     this.connectionService.disconnect();
   }

@@ -9,13 +9,13 @@ export class ContactPage implements OnInit {
 
   contacts = [
     {
-      imageUrl: '../../assets/person.png',
+      imageUrl: '../../assets/dave.png',
       eMail: 'femiadavide04@gmail.com',
       name: 'Davide',
       surname: 'Femia'
     },
     {
-      imageUrl: '../../assets/person.png',
+      imageUrl: '../../assets/vitto.jpg',
       eMail: 'vittoriocasula@gmail.com',
       name: 'Vittorio',
       surname: 'Casula'

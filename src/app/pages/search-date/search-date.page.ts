@@ -5,6 +5,7 @@ import { DateResultComponent } from './date-result/date-result.component';
 import { FirebaseDbService } from 'src/app/services/firebase-db.service';
 import { Poc } from 'src/app/models/poc.model';
 import { ShowService } from 'src/app/services/show.service';
+import { Network } from '@ionic-native/network/ngx';
 
 @Component({
   selector: 'app-search-date',
@@ -14,16 +15,17 @@ import { ShowService } from 'src/app/services/show.service';
 export class SearchDatePage {
 
   public days = [
-    {value: 'LUNEDI\'', text: 'Lunedì'},
-    {value: 'MARTEDI\'', text: 'Martedì'},
-    {value: 'MERCOLEDI\'', text: 'Mercoledì'},
-    {value: 'GIOVEDI\'', text: 'Giovedì'},
-    {value: 'VENERDI\'', text: 'Venerdì'},
-    {value: 'SABATO', text: 'Sabato'},
-    {value: 'DOMENICA', text: 'Domenica'}
+    { value: 'LUNEDI\'', text: 'Lunedì' },
+    { value: 'MARTEDI\'', text: 'Martedì' },
+    { value: 'MERCOLEDI\'', text: 'Mercoledì' },
+    { value: 'GIOVEDI\'', text: 'Giovedì' },
+    { value: 'VENERDI\'', text: 'Venerdì' },
+    { value: 'SABATO', text: 'Sabato' },
+    { value: 'DOMENICA', text: 'Domenica' }
   ];
 
   constructor(
+    private network: Network,
     private modalCtrl: ModalController,
     private db: FirebaseDbService,
     private showService: ShowService,
@@ -54,17 +56,18 @@ export class SearchDatePage {
       keyboardClose: true,
       message: 'Sto cercando...'
     }).then(loadingEl => {
-      loadingEl.present();
-      this.db.getPocByDay(selectedDay).then((success: any) => {
-        loadingEl.dismiss();
-        success.forEach((childSnapshot: any) => {
-          listPoc.push(childSnapshot.val());
+      if (this.network.type === 'none') {
+        this.showService.showError('Connessione assente');
+      } else {
+        loadingEl.present();
+        this.db.getPocByDay(selectedDay).then((success: any) => {
+          loadingEl.dismiss();
+          success.forEach((childSnapshot: any) => {
+            listPoc.push(childSnapshot.val());
+          });
+          this.presentModal(selectedDay, selectedTime, listPoc);
         });
-        this.presentModal(selectedDay, selectedTime, listPoc);
-      }, error => { // non funziona così
-        loadingEl.dismiss();
-        this.showService.showError('Ricerca Fallita');
-      });
+      }
     });
   }
 }
