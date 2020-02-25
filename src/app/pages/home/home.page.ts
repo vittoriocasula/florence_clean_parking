@@ -9,6 +9,9 @@ import { PositionService } from 'src/app/services/position.service';
 import { Poc } from 'src/app/models/poc.model';
 import { Storage } from '@ionic/storage';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { TimeService } from 'src/app/services/time.service';
+import { Network } from '@ionic-native/network/ngx';
+import { FirebaseDbService } from 'src/app/services/firebase-db.service';
 
 @Component({
   selector: 'app-home',
@@ -29,7 +32,10 @@ export class HomePage {
     private showService: ShowService,
     public connectionService: ConnectionService,
     private positionService: PositionService,
-    private storage: Storage
+    private storage: Storage,
+    private timeService: TimeService,
+    private network: Network,
+    private db: FirebaseDbService
   ) { }
 
   ionViewWillEnter() {
@@ -102,12 +108,85 @@ export class HomePage {
   }
 
   onDisconnect() {
+    this.bluetoothSerial.disconnect();
+    this.connectionService.disconnect();
     const arduinoLat = this.positionService.getArduinoLat();
     const arduinoLng = this.positionService.getArduinoLng();
     this.storage.set('arduinoLat', arduinoLat);
     this.storage.set('arduinoLng', arduinoLng);
-    this.bluetoothSerial.disconnect();
-    this.connectionService.disconnect();
+    this.positionService.getStreet(arduinoLat, arduinoLng).subscribe(httpSuccess => {
+      // tslint:disable-next-line: no-string-literal
+      const address = httpSuccess['address']['road'];
+      if (this.network.type !== 'none') {
+        this.db.getPocByAddress(address.trim().toUpperCase()).then(dbSuccess => {
+          const days = ['DOMENICA', 'LUNEDI\'', 'MARTEDI\'', 'MERCOLEDI\'', 'GIOVEDI\'', 'VENERDI\'', 'SABATO'];
+          const currentListPoc = [];
+          const futureListPoc = [];
+          const currentDate = new Date();
+          const currentWeek = this.timeService.getWeek(currentDate);
+          const currentHour = currentDate.getHours();
+          const currentMinutes = currentDate.getMinutes();
+          dbSuccess.forEach((childSnapshot: any) => {
+            const poc: Poc = childSnapshot.val();
+            const hourStart = +poc.ora_inizio.split(':')[0];
+            const minutesStart = +poc.ora_inizio.split(':')[1];
+            const hourEnd = +poc.ora_fine.split(':')[0];
+            const minutesEnd = +poc.ora_fine.split(':')[1];
+            let isCurrent = false;
+            if (poc.giorno_set === days[currentDate.getDay()]) {
+              isCurrent = this.timeService.timeLower(currentHour, currentMinutes, hourEnd, minutesEnd);
+              if (isCurrent) {
+                isCurrent = this.timeService.timeGreater(currentHour, currentMinutes, hourStart, minutesStart);
+              }
+              if (isCurrent) {
+                isCurrent = false;
+                if (poc.sett_mese !== '') {
+                  const weeks = poc.sett_mese.split(',');
+                  weeks.forEach(week => {
+                    if (currentWeek === +week) {
+                      isCurrent = true;
+                    }
+                  });
+                } else {
+                  if (poc.giorno_pari === '1' && (currentDate.getDate() % 2) === 0) {
+                    isCurrent = true;
+                  }
+                  if (poc.giorno_dispari === '1' && (currentDate.getDate() % 2) === 1) {
+                    isCurrent = true;
+                  }
+                  if (poc.giorno_pari === '1' && poc.giorno_dispari === '1') {
+                    isCurrent = true;
+                  }
+                }
+              }
+            }
+            if (isCurrent) {
+              currentListPoc.push(poc);
+            } else {
+              futureListPoc.push(poc);
+            }
+          });
+          const numPart = currentListPoc.length + futureListPoc.length;
+          if (numPart === 1) {
+            if (currentListPoc.length === 1) {
+              this.showService.showNotification1(currentListPoc[0]);
+            } else {
+              this.showService.showNotification2(futureListPoc[0]);
+            }
+          } else {
+            if (currentListPoc.length === 0) {
+              this.showService.showNotification3(futureListPoc);
+            } else {
+              this.showService.showNotification4(currentListPoc, futureListPoc);
+            }
+          }
+        });
+      } else {
+        this.showService.showNotification('DEBUG', 'query a Firebase fallita');
+      }
+    }, httpError => {
+      this.showService.showNotification('DEBUG', 'richiesta http a OpenStreetMap fallita');
+    });
   }
 
   onCancel(memo: Poc) {

@@ -7,41 +7,43 @@ export class TimeService {
 
   constructor() { }
 
-  public bilateralTimeConstraint(targetTime: string, lowerBound: string, upperBound: string) {
-    return this.upperTimeConstraint(targetTime, upperBound) && this.lowerTimeConstraint(targetTime, lowerBound);
+  getWeek(date: Date) {
+    let selectedDay = date.getDate() - 7;
+    let selectedWeek = 1;
+    while (selectedDay > 0) {
+      selectedWeek++;
+      selectedDay -= 7;
+    }
+    return selectedWeek;
   }
 
-  public upperTimeConstraint(targetTime: string, upperBound: string): boolean {
-    let timeParser = targetTime.split(':');
-    const targetHour = +timeParser[0];
-    const targetMinutes = +timeParser[1];
-    timeParser = upperBound.split(':');
-    const boundHour = +timeParser[0];
-    const boundMinutes = +timeParser[1];
+  timeGreater(hourTarget: number, minutesTarget: number, hour: number, minutes: number) {
+    let isGreater = false;
+    if (hourTarget > hour) {
+      isGreater = true;
+    }
+    if (hourTarget === hour && minutesTarget > minutes) {
+      isGreater = true;
+    }
+    return isGreater;
+  }
+
+  timeLower(hourTarget: number, minutesTarget: number, hour: number, minutes: number) {
     let isLower = false;
-    if (targetHour < boundHour) {
+    if (hourTarget < hour) {
       isLower = true;
     }
-    if (targetHour === boundHour && targetMinutes <= boundMinutes) {
+    if (hourTarget === hour && minutesTarget < minutes) {
       isLower = true;
     }
     return isLower;
   }
 
-  public lowerTimeConstraint(targetTime: string, lowerBound: string): boolean {
-    let timeParser = targetTime.split(':');
-    const targetHour = +timeParser[0];
-    const targetMinutes = +timeParser[1];
-    timeParser = lowerBound.split(':');
-    const boundHour = +timeParser[0];
-    const boundMinutes = +timeParser[1];
-    let isGreater = false;
-    if (targetHour > boundHour) {
-      isGreater = true;
+  isLeapYear(year: number) {
+    let isLeap = false;
+    if (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)) {
+      isLeap = true;
     }
-    if (targetHour === boundHour && targetMinutes >= boundMinutes) {
-      isGreater = true;
-    }
-    return isGreater;
+    return isLeap;
   }
 }

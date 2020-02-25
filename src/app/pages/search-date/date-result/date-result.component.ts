@@ -3,6 +3,7 @@ import { ModalController, IonCheckbox } from '@ionic/angular';
 import { Poc } from 'src/app/models/poc.model';
 import { Storage } from '@ionic/storage';
 import { ShowService } from 'src/app/services/show.service';
+import { TimeService } from 'src/app/services/time.service';
 
 @Component({
   selector: 'app-date-result',
@@ -17,16 +18,18 @@ export class DateResultComponent implements OnInit {
   indexArray = [];
 
   constructor(
+    private timeService: TimeService,
     private modalCtrl: ModalController,
     private storage: Storage,
     private showService: ShowService
   ) { }
 
   ngOnInit() {
+    const selectedDate = this.getSelectedDate();
+    const selectedWeek = this.timeService.getWeek(selectedDate);
     this.listPoc = this.listPoc.filter(poc => {
       let isValid: boolean;
       if (poc.sett_mese !== '') {
-        const selectedWeek = this.getSelectedWeek();
         isValid = false;
         const weeks = poc.sett_mese.split(',');
         weeks.forEach(week => {
@@ -35,7 +38,6 @@ export class DateResultComponent implements OnInit {
           }
         });
       } else {
-        const selectedDate = this.getSelectedDate();
         if (poc.giorno_pari === '1') {
           isValid = (selectedDate.getDate() % 2) === 0;
         }
@@ -53,26 +55,15 @@ export class DateResultComponent implements OnInit {
         const minutesStart = +poc.ora_inizio.split(':')[1];
         const hourEnd = +poc.ora_fine.split(':')[0];
         const minutesEnd = +poc.ora_fine.split(':')[1];
-        if (this.timeLower(selectedHour, selectedMinutes, hourStart, minutesStart)) {
+        if (this.timeService.timeLower(selectedHour, selectedMinutes, hourStart, minutesStart)) {
           isValid = false;
         }
-        if (this.timeGreater(selectedHour, selectedMinutes, hourEnd, minutesEnd)) {
+        if (this.timeService.timeGreater(selectedHour, selectedMinutes, hourEnd, minutesEnd)) {
           isValid = false;
         }
       }
       return isValid;
     });
-  }
-
-  private getSelectedWeek() {
-    const selectedDate = this.getSelectedDate();
-    let selectedDay = selectedDate.getDate() - 7;
-    let selectedWeek = 1;
-    while (selectedDay > 0) {
-      selectedWeek++;
-      selectedDay -= 7;
-    }
-    return selectedWeek;
   }
 
   private getSelectedDate(): Date {
@@ -87,7 +78,7 @@ export class DateResultComponent implements OnInit {
     const currentDate = new Date();
     let selectedMonth = currentDate.getMonth();
     let selectedYear = currentDate.getFullYear();
-    if (this.isLeapYear(selectedYear)) {
+    if (this.timeService.isLeapYear(selectedYear)) {
       dayOfMonths[1]++;
     }
     let selectedDay = currentDate.getDate() + (days.indexOf(this.day) + 8 - currentDate.getDay()) % 7;
@@ -106,36 +97,6 @@ export class DateResultComponent implements OnInit {
       selectedDate = new Date(selectedYear, selectedMonth, selectedDay);
     }
     return selectedDate;
-  }
-
-  private isLeapYear(year: number) {
-    let isLeap = false;
-    if (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0)) {
-      isLeap = true;
-    }
-    return isLeap;
-  }
-
-  private timeGreater(hourTarget: number, minutesTarget: number, hour: number, minutes: number) {
-    let isGreater = false;
-    if (hourTarget > hour) {
-      isGreater = true;
-    }
-    if (hourTarget === hour && minutesTarget > minutes) {
-      isGreater = true;
-    }
-    return isGreater;
-  }
-
-  private timeLower(hourTarget: number, minutesTarget: number, hour: number, minutes: number) {
-    let isLower = false;
-    if (hourTarget < hour) {
-      isLower = true;
-    }
-    if (hourTarget === hour && minutesTarget < minutes) {
-      isLower = true;
-    }
-    return isLower;
   }
 
   onCancel() {

@@ -10,6 +10,7 @@ import { Poc } from 'src/app/models/poc.model';
 import { FirebaseDbService } from 'src/app/services/firebase-db.service';
 import { Storage } from '@ionic/storage';
 import { Network } from '@ionic-native/network/ngx';
+import { TimeService } from 'src/app/services/time.service';
 
 @Component({
   selector: 'app-connect',
@@ -24,6 +25,7 @@ export class ConnectPage implements OnInit {
   isDiscovering: boolean;
 
   constructor(
+    private timeService: TimeService,
     private network: Network,
     private storage: Storage,
     private bluetoothSerial: BluetoothSerial,
@@ -106,7 +108,6 @@ export class ConnectPage implements OnInit {
   onConnect() {
     this.bluetoothSerial.isEnabled().then(success => {
       const selectedMac = this.radio.value;
-      this.storage.set('lastMacDevice', selectedMac);
       this.loadingCtrl.create({
         keyboardClose: true,
         message: 'Mi sto connettendo...'
@@ -114,32 +115,27 @@ export class ConnectPage implements OnInit {
         loadingEl.present();
         this.bluetoothSerial.connect(selectedMac).subscribe(connected => {
           loadingEl.dismiss();
+          this.storage.set('lastMacDevice', selectedMac);
           const device = this.devicesService.getDevice(selectedMac);
           this.connectionService.connect(device);
           this.navCtrl.navigateBack('/menu/home');
         }, error => {
           if (this.connectionService.connectionState) {
-            this.connectionService.connectionState = false; // TODO correggere il pulsante disconnetti nella home page
+            this.connectionService.connectionState = false;
             const arduinoLat = this.positionService.getArduinoLat();
             const arduinoLng = this.positionService.getArduinoLng();
             this.storage.set('arduinoLat', arduinoLat);
             this.storage.set('arduinoLng', arduinoLng);
-            // mettere arduinoLat e arduinoLng sul localStorage
-            console.log(arduinoLat);
-            console.log(arduinoLng);
             this.positionService.getStreet(arduinoLat, arduinoLng).subscribe(httpSuccess => {
-              console.log(httpSuccess);
               // tslint:disable-next-line: no-string-literal
               const address = httpSuccess['address']['road'];
-              console.log(address);
               if (this.network.type !== 'none') {
                 this.db.getPocByAddress(address.trim().toUpperCase()).then(dbSuccess => {
                   const days = ['DOMENICA', 'LUNEDI\'', 'MARTEDI\'', 'MERCOLEDI\'', 'GIOVEDI\'', 'VENERDI\'', 'SABATO'];
-                  const currentListPoc = []; // quelli che sono in atto
-                  const futureListPoc = []; // quelli che non sono in atto
+                  const currentListPoc = [];
+                  const futureListPoc = [];
                   const currentDate = new Date();
-                  const currentWeek = this.getCurrentWeek();
-                  console.log('currentWeek: ' + currentWeek);
+                  const currentWeek = this.timeService.getWeek(currentDate);
                   const currentHour = currentDate.getHours();
                   const currentMinutes = currentDate.getMinutes();
                   dbSuccess.forEach((childSnapshot: any) => {
@@ -150,13 +146,12 @@ export class ConnectPage implements OnInit {
                     const minutesEnd = +poc.ora_fine.split(':')[1];
                     let isCurrent = false;
                     if (poc.giorno_set === days[currentDate.getDay()]) {
-                      isCurrent = this.timeLower(currentHour, currentMinutes, hourEnd, minutesEnd);
+                      isCurrent = this.timeService.timeLower(currentHour, currentMinutes, hourEnd, minutesEnd);
                       if (isCurrent) {
-                        isCurrent = this.timeGreater(currentHour, currentMinutes, hourStart, minutesStart);
+                        isCurrent = this.timeService.timeGreater(currentHour, currentMinutes, hourStart, minutesStart);
                       }
                       if (isCurrent) {
                         isCurrent = false;
-                        console.log('le ore son giuste');
                         if (poc.sett_mese !== '') {
                           const weeks = poc.sett_mese.split(',');
                           weeks.forEach(week => {
@@ -184,17 +179,6 @@ export class ConnectPage implements OnInit {
                     }
                   });
                   const numPart = currentListPoc.length + futureListPoc.length;
-                  console.log('CURRENT:\n' + currentListPoc);
-                  currentListPoc.forEach(poc => {
-                    console.log(poc);
-                    console.log('\n');
-                  });
-                  console.log('-----------------------');
-                  console.log('FUTURE:\n');
-                  futureListPoc.forEach(poc => {
-                    console.log(poc);
-                    console.log('\n');
-                  });
                   if (numPart === 1) {
                     if (currentListPoc.length === 1) {
                       this.showService.showNotification1(currentListPoc[0]);
@@ -209,10 +193,11 @@ export class ConnectPage implements OnInit {
                     }
                   }
                 });
+              } else {
+                this.showService.showNotification('DEBUG', 'query a Firebase fallita');
               }
             }, httpError => {
-              this.showService.showNotification('Disconnesso', 'lat=' + arduinoLat + ' lng=' + arduinoLng);
-              // http request fallisce
+              this.showService.showNotification('DEBUG', 'richiesta http a OpenStreetMap fallita');
             });
           } else {
             loadingEl.dismiss();
@@ -225,38 +210,4 @@ export class ConnectPage implements OnInit {
       this.showService.showToast('Attiva il bluetooth');
     });
   }
-
-  private getCurrentWeek() {
-    const currentDate = new Date();
-    let currentWeek = 1;
-    let currentDay = currentDate.getDate() - 7;
-    while (currentDay > 0) {
-      currentWeek++;
-      currentDay -= 7;
-    }
-    return currentWeek;
-  }
-
-  private timeGreater(hourTarget: number, minutesTarget: number, hour: number, minutes: number) {
-    let isGreater = false;
-    if (hourTarget > hour) {
-      isGreater = true;
-    }
-    if (hourTarget === hour && minutesTarget > minutes) {
-      isGreater = true;
-    }
-    return isGreater;
-  }
-
-  private timeLower(hourTarget: number, minutesTarget: number, hour: number, minutes: number) {
-    let isLower = false;
-    if (hourTarget < hour) {
-      isLower = true;
-    }
-    if (hourTarget === hour && minutesTarget < minutes) {
-      isLower = true;
-    }
-    return isLower;
-  }
-
 }
