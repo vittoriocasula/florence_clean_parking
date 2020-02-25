@@ -8,12 +8,80 @@
     </ion-title>
   </ion-toolbar>
 </ion-header>
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>Stato Connessione</ion-card-header>
+          <ion-list>
+            <ion-item lines="none">
+              <ion-label>
+                <ion-label *ngIf="!(connectionService.connectionState)">Disconnesso</ion-label>
+                <ion-label *ngIf="connectionService.connectionState">Connesso ad {{connectionService.connectedDevice.name}}
+                </ion-label>
+              </ion-label>
+            </ion-item>
+            <ion-item *ngIf="connectionService.connectionState" lines="none">
+              <ion-button slot="end" class="bluetooth-buttons" (click)="onDisconnect()">
+                <ion-label>Disconnetti</ion-label>
+                <ion-icon slot="start" name="power"></ion-icon>
+              </ion-button>
+            </ion-item>
+            <ion-item *ngIf="!(connectionService.connectionState)" lines="none">
+              <ion-button class="bluetooth-buttons" (click)="onConnect()" slot="end">
+                <ion-label>Connetti</ion-label>
+                <ion-icon slot="start" name="bluetooth"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-list>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-card>
+          <ion-card-header>Promemoria</ion-card-header>
+          <ion-item *ngIf="memos.length === 0" lines="none">
+            <ion-label>
+              <ion-label>Non ci sono promemoria</ion-label>
+            </ion-label>
+          </ion-item>
+          <ion-list *ngIf="memos.length > 0">
+            <ion-item *ngFor="let memo of memos" lines="none">
+              <ion-label text-wrap>In {{memo.indirizzo}} c'è pulizia strade {{memo | addressQuery: false}}</ion-label>
+              <ion-buttons>
+                <ion-button (click)="onCancel(memo)">
+                  <ion-icon name="close"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-item>
+          </ion-list>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<!--
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title id="title_home">
+      Florence Clean Parking
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
   <ion-grid>
     <ion-row>
       <ion-col>
         <ion-card>
+
+
           <ion-list>
             <ion-item lines="none">
               <ion-label>
@@ -37,6 +105,8 @@
             </ion-item>
           </ion-list>
         </ion-card>
+
+
       </ion-col>
     </ion-row>
     <ion-row>
@@ -65,3 +135,4 @@
     </ion-row>
   </ion-grid>
 </ion-content>
+-->

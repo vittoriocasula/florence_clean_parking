@@ -13,23 +13,23 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
   <ion-item>
-    <ion-text *ngIf="listPoc.length !== 0">
-      <h1 *ngIf="!(part)">Nell'indirizzo {{address}} {{listPoc.length > 0 ? 'si effettuano pulizia strade:' : 'non si effettuano pulizia strade'}}</h1>
-      <h1 *ngIf="part">Nell'indirizzo {{address}} tratto {{part}} {{listPoc.length > 0 ? 'si effettuano pulizia strade:' : 'non si effettuano pulizia strade'}}</h1>
-    </ion-text>
-    <ion-text *ngIf="listPoc.length === 0">
-      <h1>Nessun risultato trovato</h1>
-    </ion-text>
+    <ion-label *ngIf="listPoc.length !== 0" text-wrap>
+      <ion-label class ="subtitle" *ngIf="!(part)" text-wrap>Nell'indirizzo {{address}} {{listPoc.length > 0 ? 'si effettuano pulizia strade:' : 'non si effettuano pulizia strade'}}</ion-label>
+      <ion-label class ="subtitle" *ngIf="part" text-wrap>Nell'indirizzo {{address}} tratto {{part}} {{listPoc.length > 0 ? 'si effettuano pulizia strade:' : 'non si effettuano pulizia strade'}}</ion-label>
+    </ion-label>
+    <ion-label *ngIf="listPoc.length === 0" text-wrap>
+      Nessun risultato trovato
+    </ion-label>
   </ion-item>
+  
   <ion-list>
     <ion-item *ngFor="let poc of listPoc">
-      <ion-text>
-        <p *ngIf="!(part)">{{poc | addressQuery: false}}</p>
-        <p *ngIf="part">{{poc | addressQuery: true}}</p>
-      </ion-text>
+      <ion-label>
+        <ion-label *ngIf="!(part)" text-wrap>{{poc | addressQuery: false}}</ion-label>
+        <ion-label *ngIf="part" text-wrap>{{poc | addressQuery: true}}</ion-label>
+      </ion-label>
       <ion-checkbox slot="end" #box (ionChange)="onChange(box, poc)"></ion-checkbox>
     </ion-item>
   </ion-list>

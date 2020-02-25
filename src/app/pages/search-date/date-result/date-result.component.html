@@ -16,22 +16,22 @@
 
 <ion-content>
   <ion-item>
-    <ion-text *ngIf="listPoc.length !== 0">
-      <h1>{{day | dateHeader: time}}</h1>
-    </ion-text>
-    <ion-text *ngIf="listPoc.length === 0">
-      <h1>Nessun risultato trovato</h1>
-    </ion-text>
+    <ion-label class ="subtitle" *ngIf="listPoc.length !== 0" text-wrap>
+      {{day | dateHeader: time}}
+    </ion-label>
+    <ion-label *ngIf="listPoc.length === 0" text-wrap>
+      Nessun risultato trovato
+    </ion-label>
   </ion-item>
   <ion-list>
     <ion-item *ngFor="let poc of listPoc">
-      <ion-text *ngIf="!(time)">
+      <ion-label  *ngIf="!(time)" text-wrap>
         {{poc.indirizzo}} {{poc.tratto_str ? 'tratto ' + poc.tratto_str : '' }} dalle ore {{poc.ora_inizio}} alle
         {{poc.ora_fine}}
-      </ion-text>
-      <ion-text *ngIf="time">
+      </ion-label>
+      <ion-label *ngIf="time" text-wrap>
         {{poc.indirizzo}} {{poc.tratto_str ? 'tratto ' + poc.tratto_str : '' }}
-      </ion-text>
+      </ion-label>
       <ion-checkbox slot="end" #box (ionChange)="onChange(box, poc)"></ion-checkbox>
     </ion-item>
   </ion-list>

@@ -43,7 +43,7 @@ export class MapPage {
     public posService: PositionService) { }
 
   ionViewWillEnter() {
-    // this.menuCtrl.swipeGesture(false);
+    this.menuCtrl.swipeGesture(false);
     this.network.onDisconnect().subscribe(() => {
       this.networkAvailable = false;
       this.destroyMap(this.map);

@@ -1,8 +1,3 @@
-.welcome-card img {
-  max-height: 35vh;
-  overflow: hidden;
-}
-
 #title_home{
   color: var(--color-arduino-grey);
   font-weight: bold;
@@ -11,4 +6,9 @@
 .bluetooth-buttons {
   --background: var(--color-arduino-grey);
   
+}
+
+ion-card-header {
+  font-weight: bold;
+  font-size: 17px;
 }

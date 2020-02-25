@@ -11,6 +11,7 @@ import { FirebaseDbService } from 'src/app/services/firebase-db.service';
 import { Storage } from '@ionic/storage';
 import { Network } from '@ionic-native/network/ngx';
 import { TimeService } from 'src/app/services/time.service';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-connect',
@@ -180,17 +181,21 @@ export class ConnectPage implements OnInit {
                     }
                   });
                   const numPart = currentListPoc.length + futureListPoc.length;
-                  if (numPart === 1) {
-                    if (currentListPoc.length === 1) {
-                      this.showService.showNotification1(currentListPoc[0]);
-                    } else {
-                      this.showService.showNotification2(futureListPoc[0]);
-                    }
+                  if (numPart === 0) {
+                    this.showService.showNotification('Tranquillo!', 'La tua auto non si trova in una strada soggetta a pulizie.');
                   } else {
-                    if (currentListPoc.length === 0) {
-                      this.showService.showNotification3(futureListPoc);
+                    if (numPart === 1) {
+                      if (currentListPoc.length === 1) {
+                        this.showService.showNotification1(currentListPoc[0]);
+                      } else {
+                        this.showService.showNotification2(futureListPoc[0]);
+                      }
                     } else {
-                      this.showService.showNotification4(currentListPoc, futureListPoc);
+                      if (currentListPoc.length === 0) {
+                        this.showService.showNotification3(futureListPoc);
+                      } else {
+                        this.showService.showNotification4(currentListPoc, futureListPoc);
+                      }
                     }
                   }
                 });

@@ -167,6 +167,9 @@ export class HomePage {
             }
           });
           const numPart = currentListPoc.length + futureListPoc.length;
+          if (numPart === 0) {
+            this.showService.showNotification('Tranquillo!', 'La tua auto non si trova in una strada soggetta a pulizie.');
+          } else {
           if (numPart === 1) {
             if (currentListPoc.length === 1) {
               this.showService.showNotification1(currentListPoc[0]);
@@ -180,6 +183,7 @@ export class HomePage {
               this.showService.showNotification4(currentListPoc, futureListPoc);
             }
           }
+        }
         });
       } else {
         this.showService.showNotification('DEBUG', 'query a Firebase fallita');
