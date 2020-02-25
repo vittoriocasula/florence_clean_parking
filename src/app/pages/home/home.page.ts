@@ -114,7 +114,7 @@ export class HomePage {
     const arduinoLng = this.positionService.getArduinoLng();
     this.storage.set('arduinoLat', arduinoLat);
     this.storage.set('arduinoLng', arduinoLng);
-    this.positionService.getStreet('43.79345', '11.16696').subscribe(httpSuccess => {
+    this.positionService.getStreet(arduinoLat, arduinoLng).subscribe(httpSuccess => {
       // tslint:disable-next-line: no-string-literal
       const address = httpSuccess['address']['road'];
       if (this.network.type !== 'none') {
@@ -122,8 +122,7 @@ export class HomePage {
           const days = ['DOMENICA', 'LUNEDI\'', 'MARTEDI\'', 'MERCOLEDI\'', 'GIOVEDI\'', 'VENERDI\'', 'SABATO'];
           const currentListPoc = [];
           const futureListPoc = [];
-          const d = new Date(); // levare
-          const currentDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 11, 0); // levare
+          const currentDate = new Date();
           const currentWeek = this.timeService.getWeek(currentDate);
           const currentHour = currentDate.getHours();
           const currentMinutes = currentDate.getMinutes();
