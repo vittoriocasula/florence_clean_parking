@@ -180,7 +180,7 @@ export class ShowService {
         text: this.currentPocToText(currentListPoc[i]),
         actions: [
           { id: 'button' + (i + futureListPoc.length).toString(), title: 'Aggiungi a Promemoria' },
-          { id: 'closeButton' + i.toString(), title: 'Sposta l\'auto' }
+          { id: 'closeButton' + (i + futureListPoc.length).toString(), title: 'Sposta l\'auto' }
         ],
         group: 'type1'
       });
@@ -206,42 +206,45 @@ export class ShowService {
       arrayNotification
     );
 
-    for (i = 0; i < (currentListPoc.length + futureListPoc.length); i++) {
+    for (i = 0; i < currentListPoc.length; i++) {
       const j = i;
-      this.localNotifications.on('button' + i.toString()).subscribe(() => {
-        if (i < futureListPoc.length) {
-          this.storage.get('listPoc').then((memos: Poc[]) => {
-            if (memos) {
-              if (!(memos.find(memo => memo.id === futureListPoc[j].id))) {
-                memos.push(futureListPoc[j]);
-              }
-            } else {
-              memos = [];
-              memos.push(futureListPoc[j]);
+      this.localNotifications.on('button' + (j + futureListPoc.length).toString()).subscribe(() => {
+        this.storage.get('listPoc').then((memos: Poc[]) => {
+          if (memos) {
+            if (!(memos.find(memo => memo.id === currentListPoc[j].id))) {
+              memos.push(currentListPoc[j]);
             }
-          });
-        } else {
-          this.storage.get('listPoc').then((memos: Poc[]) => {
-            if (memos) {
-              if (!(memos.find(memo => memo.id === currentListPoc[j - futureListPoc.length].id))) {
-                memos.push(currentListPoc[j - futureListPoc.length]);
-              }
-            } else {
-              memos = [];
-              memos.push(currentListPoc[j - futureListPoc.length]);
-            }
-          });
-        }
-        console.log('Aggiungi a Local Storage listPoc[i]');
-        this.localNotifications.clear(i);
-      });
-      if (i >= futureListPoc.length) {
-        this.localNotifications.on('closeButton' + (i - futureListPoc.length).toString()).subscribe(() => {
-          this.localNotifications.clear(i);
+          } else {
+            memos = [];
+            memos.push(currentListPoc[j]);
+          }
+          this.localStorage.setItem('listPoc', memos);
         });
-      }
+        this.localNotifications.clear(j + futureListPoc.length);
+
+      });
+      this.localNotifications.on('closeButton' + (j + futureListPoc.length).toString()).subscribe(() => {
+        this.localNotifications.clear(j + futureListPoc.length);
+      });
     }
 
+    for (i = 0; i < futureListPoc.length; i++) {
+      const k = i;
+      this.localNotifications.on('button' + k.toString()).subscribe(() => {
+        this.storage.get('listPoc').then((memos: Poc[]) => {
+          if (memos) {
+            if (!(memos.find(memo => memo.id === futureListPoc[k].id))) {
+              memos.push(futureListPoc[k]);
+            }
+          } else {
+            memos = [];
+            memos.push(futureListPoc[k]);
+          }
+          this.localStorage.setItem('listPoc', memos);
+        });
+        this.localNotifications.clear(k);
+      });
+    }
   }
 
 
