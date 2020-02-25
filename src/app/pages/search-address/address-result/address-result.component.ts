@@ -25,7 +25,7 @@ export class AddressResultComponent implements OnInit {
 
   ngOnInit() {
     if (this.part) {
-      this.listPoc = this.listPoc.filter((poc: Poc) => { // true se lo voglio false altrimenti
+      this.listPoc = this.listPoc.filter((poc: Poc) => {
         return poc.tratto_str === this.part.trim().toUpperCase();
       });
     }

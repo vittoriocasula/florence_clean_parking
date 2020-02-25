@@ -16,8 +16,11 @@
 
 <ion-content>
   <ion-item>
-    <ion-text>
+    <ion-text *ngIf="listPoc.length !== 0">
       <h1>{{day | dateHeader: time}}</h1>
+    </ion-text>
+    <ion-text *ngIf="listPoc.length === 0">
+      <h1>Nessun risultato trovato</h1>
     </ion-text>
   </ion-item>
   <ion-list>

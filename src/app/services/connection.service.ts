@@ -11,8 +11,8 @@ export class ConnectionService {
   constructor() { }
 
   connect(device: Device) {
-    this.connectionState = true;
     this.connectedDevice = device;
+    this.connectionState = true;
   }
 
   disconnect() {

@@ -53,6 +53,7 @@ export class SearchAddressPage {
           success.forEach((childSnapshot: any) => {
             listPoc.push(childSnapshot.val());
           });
+          // filtro e scelgo se presentare il modal
           this.presentModal(f.form.value.address, f.form.value.part, listPoc);
         });
       }

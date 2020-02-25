@@ -148,8 +148,6 @@ export class ShowService {
             memos = [];
             memos.push(listPoc[j]);
           }
-          /*this.storage.set('listPoc', memos);
-          this.storageSub.next('added');*/
           this.localStorage.setItem('listPoc', memos);
         });
         this.localNotifications.clear(i);

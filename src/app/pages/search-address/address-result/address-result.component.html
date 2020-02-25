@@ -16,9 +16,12 @@
 
 <ion-content>
   <ion-item>
-    <ion-text>
+    <ion-text *ngIf="listPoc.length !== 0">
       <h1 *ngIf="!(part)">Nell'indirizzo {{address}} {{listPoc.length > 0 ? 'si effettuano pulizia strade:' : 'non si effettuano pulizia strade'}}</h1>
       <h1 *ngIf="part">Nell'indirizzo {{address}} tratto {{part}} {{listPoc.length > 0 ? 'si effettuano pulizia strade:' : 'non si effettuano pulizia strade'}}</h1>
+    </ion-text>
+    <ion-text *ngIf="listPoc.length === 0">
+      <h1>Nessun risultato trovato</h1>
     </ion-text>
   </ion-item>
   <ion-list>

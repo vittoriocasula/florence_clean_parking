@@ -118,6 +118,7 @@ export class ConnectPage implements OnInit {
           this.storage.set('lastMacDevice', selectedMac);
           const device = this.devicesService.getDevice(selectedMac);
           this.connectionService.connect(device);
+          this.storage.set('lastDevice', device);
           this.navCtrl.navigateBack('/menu/home');
         }, error => {
           if (this.connectionService.connectionState) {
