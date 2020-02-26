@@ -181,10 +181,10 @@ export class AppComponent {
                       }
                     });
                   } else {
-                    this.showService.showNotification('DEBUG', 'query a Firebase fallita');
+                    this.showService.showNotification('Errore', 'Interrogazione a Firebase fallita');
                   }
                 }, httpError => {
-                  this.showService.showNotification('DEBUG', 'richiesta http a OpenStreetMap fallita');
+                  this.showService.showNotification('Errore', 'Richiesta http a OpenStreetMap fallita');
                 });
               } else {
                 this.splashScreen.hide();

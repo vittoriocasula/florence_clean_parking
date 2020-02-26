@@ -1,0 +1,15 @@
+#connect {
+  --background: var(--color-arduino-grey);
+}
+
+#card {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 0px;
+    z-index: 3 !important;
+    background-color: white;
+}
+
+#buttonConnect{
+  --background: var(--color-arduino-grey);
+}

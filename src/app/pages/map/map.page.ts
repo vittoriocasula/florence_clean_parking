@@ -11,7 +11,7 @@ import { MenuController } from '@ionic/angular';
   styleUrls: ['./map.page.scss'],
 })
 export class MapPage {
-  gpsAvailable: boolean;
+  map: Map;
   networkAvailable: boolean;
   lat: number;
   lng: number;
@@ -35,7 +35,6 @@ export class MapPage {
     maximumAge: 0
   };
 
-  map: Map;
   constructor(
     private network: Network,
     private menuCtrl: MenuController,
@@ -66,7 +65,6 @@ export class MapPage {
 
   buildMap() {
     if (this.map === undefined) {
-      console.log('sono entrato in build map');
       this.map = new Map('map');
       this.map.invalidateSize(); // rerender map
     }
@@ -132,9 +130,16 @@ export class MapPage {
 
   setViewCurrentPosition() {
     this.markerPosition.remove();
-    this.markerPosition = new Marker([this.lat, this.lng], { icon: this.markerIcon });
-    this.markerPosition.addTo(this.map);
-    this.map.setView([this.lat, this.lng], 17);
+
+    this.geolocation.getCurrentPosition().then((resp) => {
+      this.lat = resp.coords.latitude;
+      this.lng = resp.coords.longitude;
+      this.markerPosition = new Marker([this.lat, this.lng], { icon: this.markerIcon });
+      this.markerPosition.addTo(this.map);
+      this.map.setView([this.lat, this.lng], 17);
+    }).catch((error) => {
+      console.log('Error getting location', error);
+    });
   }
 
   setArduinoPosition() {

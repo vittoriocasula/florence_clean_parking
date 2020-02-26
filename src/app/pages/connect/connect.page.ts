@@ -11,7 +11,6 @@ import { FirebaseDbService } from 'src/app/services/firebase-db.service';
 import { Storage } from '@ionic/storage';
 import { Network } from '@ionic-native/network/ngx';
 import { TimeService } from 'src/app/services/time.service';
-import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-connect',
@@ -49,6 +48,8 @@ export class ConnectPage implements OnInit {
     this.bluetoothSerial.isEnabled().then(success => {
       this.associatedDevices = [];
       this.bluetoothSerial.list().then((devices: any[]) => {
+        console.log('ONREFRESH:\n');
+        console.log(devices);
         devices.forEach((device: any) => {
           const newDevice = new Device(device.name, device.id);
           this.associatedDevices.push(newDevice);
@@ -66,6 +67,7 @@ export class ConnectPage implements OnInit {
       this.availableDevices = [];
       this.isDiscovering = true;
       this.bluetoothSerial.discoverUnpaired().then((devices: any[]) => {
+        console.log('ONDISCOVER:\n');
         const discoveredMacs = [];
         const discoveredDevices = [];
 
@@ -73,6 +75,7 @@ export class ConnectPage implements OnInit {
         devices.forEach((device: any) => {
           if (discoveredMacs.indexOf(device.id) === -1) {
             discoveredMacs.push(device.id);
+            console.log(device); // ci sono anche gli accoppiati
             discoveredDevices.push(new Device(device.name, device.id));
           }
         });
@@ -200,10 +203,10 @@ export class ConnectPage implements OnInit {
                   }
                 });
               } else {
-                this.showService.showNotification('DEBUG', 'query a Firebase fallita');
+                this.showService.showNotification('Error', 'Interrogazione a Firebase fallita');
               }
             }, httpError => {
-              this.showService.showNotification('DEBUG', 'richiesta http a OpenStreetMap fallita');
+              this.showService.showNotification('Errore', 'Richiesta http a OpenStreetMap fallita');
             });
           } else {
             loadingEl.dismiss();
