@@ -138,7 +138,7 @@ export class ShowService {
     );
     for (i = 0; i < listPoc.length; i++) {
       const j = i;
-      this.localNotifications.on('button' + i.toString()).subscribe(() => {
+      this.localNotifications.on('button' + j.toString()).subscribe(() => {
         this.storage.get('listPoc').then((memos: Poc[]) => {
           if (memos) {
             if (!(memos.find(memo => memo.id === listPoc[j].id))) {
@@ -150,7 +150,7 @@ export class ShowService {
           }
           this.localStorage.setItem('listPoc', memos);
         });
-        this.localNotifications.clear(i);
+        this.localNotifications.clear(j);
 
       });
     }
